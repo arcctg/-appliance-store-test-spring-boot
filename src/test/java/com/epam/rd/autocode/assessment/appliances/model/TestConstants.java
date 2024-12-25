@@ -79,7 +79,7 @@ public class TestConstants {
     }
 
     static class Orders {
-        public static final String CLASS_NAME = "Orders";
+        public static final String CLASS_NAME = "Order";
         public static final int CLASS_COUNT_FIELDS = 5;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;

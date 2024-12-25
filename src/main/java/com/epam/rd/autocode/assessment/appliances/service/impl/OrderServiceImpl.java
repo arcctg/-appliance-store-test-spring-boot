@@ -1,8 +1,8 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import com.epam.rd.autocode.assessment.appliances.model.Order;
 import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
-import com.epam.rd.autocode.assessment.appliances.model.Orders;
-import com.epam.rd.autocode.assessment.appliances.repository.OrdersRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,34 +13,34 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final OrdersRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository) {
-        this.orderRepository = ordersRepository;
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @Override
-    public void addOrder(Orders order) {
+    public void addOrder(Order order) {
         orderRepository.save(order);
     }
 
     @Override
-    public void updateOrder(Orders order) {
-        Orders orderToUpdate = getOrderById(order.getId());
+    public void updateOrder(Order order) {
+        Order orderToUpdate = getOrderById(order.getId());
         BeanUtils.copyProperties(order, orderToUpdate, "id");
         orderRepository.save(orderToUpdate);
     }
 
     @Override
-    public Orders getOrderById(Long id) {
+    public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not " +
                 "found"));
     }
 
     @Override
     public void approveOrderById(Long id, boolean approved) {
-        Orders order = getOrderById(id);
+        Order order = getOrderById(id);
         order.setApproved(approved);
         orderRepository.save(order);
     }
@@ -51,12 +51,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> getAllOrders(Pageable pageable) {
+    public List<Order> getAllOrders(Pageable pageable) {
         return orderRepository.findAll(pageable).toList();
     }
 
     @Override
-    public List<Orders> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
@@ -67,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void addOrderRow(Long orderId, OrderRow orderRow) {
-        Orders order = getOrderById(orderId);
+        Order order = getOrderById(orderId);
         order.getOrderRowSet().add(orderRow);
         orderRepository.save(order);
     }

@@ -11,7 +11,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Orders {
+@Table(name = "\"order\"")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +20,7 @@ public class Orders {
     private Employee employee;
     @ManyToOne
     private Client client;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<OrderRow> orderRowSet;
     private Boolean approved;
 }

@@ -1,19 +1,19 @@
 package com.epam.rd.autocode.assessment.appliances.service;
 
+import com.epam.rd.autocode.assessment.appliances.model.Order;
 import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
-import com.epam.rd.autocode.assessment.appliances.model.Orders;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface OrderService {
-    void addOrder(Orders order);
-    void updateOrder(Orders order);
-    Orders getOrderById(Long id);
+    void addOrder(Order order);
+    void updateOrder(Order order);
+    Order getOrderById(Long id);
     void approveOrderById(Long id, boolean approved);
     void deleteOrderById(Long id);
-    List<Orders> getAllOrders(Pageable pageable);
-    List<Orders> getAllOrders();
+    List<Order> getAllOrders(Pageable pageable);
+    List<Order> getAllOrders();
     int getOrdersSize();
     void addOrderRow(Long orderId , OrderRow orderRow);
 }
