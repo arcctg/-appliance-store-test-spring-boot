@@ -22,7 +22,6 @@
         <th th:text="#{object.user.email}"></th>
         <th th:text="#{object.user.password}"></th>
         <th th:text="#{object.employee.department}"></th>
-        <th >Operation</th>
     </tr>
     </thead>
     <tbody>
@@ -33,13 +32,8 @@
             <td th:text="${employee.password}"/>
             <td th:text="${employee.department}"/>
             <td>
-                <div>
-                    <a th:href="@{employees/}+${employee.id}+@{/delete}">
-                    <span class="icon">
-                          <i class="fa fa-minus"></i>
-                    </span>
-                    </a>
-                </div>
+                <a th:href="@{/employees/edit(id=${employee.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
+                <a th:href="@{/employees/delete(id=${employee.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
             </td>
         </tr>
 

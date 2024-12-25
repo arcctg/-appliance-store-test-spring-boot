@@ -25,7 +25,6 @@
             <th>Client</th>
             <th>Employee</th>
             <th>Approved</th>
-            <th>Amount</th>
             <th>Operation</th>
         </tr>
         </thead>
@@ -36,36 +35,39 @@
             <td><span class="float-end" th:text="${order.employee}"/></td>
             <td>
                 <div th:if="${order.approved}">
-                    <a th:href="@{orders/}+${order.id}+@{/unapproved}">
+                    <a th:href="@{/orders/cancel(id=${order.id})}">
                       <span class="icon">
-                        <i class="fa fa-check"></i>
+                        <i class="fa fa-minus"></i>
                       </span>
-
                     </a>
                 </div>
                 <!-- ELSE -->
                 <div th:unless="${order.approved}">
-                    <a th:href="@{orders/}+${order.id}+@{/approved}">
+                    <a th:href="@{/orders/approve(id=${order.id})}">
                     <span class="icon">
-                          <i class="fa fa-minus"></i>
+                          <i class="fa fa-check"></i>
                     </span>
-
                     </a>
+<!--                    <a th:href="@{/orders/approve(id=${order.id})}" class="btn btn-primary" th:text="#{btn.approve}"/>-->
                 </div>
             </td>
-            <td><span class="float-end" th:text="${order.getAmount}"/></td>
-            <td>
-                <div>
-                    <a th:href="@{orders/}+${order.id}+@{/delete}">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </div>
-                <div>
-                    <a th:href="@{orders/}+${order.id}+@{/edit}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                </div>
+<!--            <td><span class="float-end" th:text="${order.getAmount}"/></td>-->
+<!--            <td>-->
+<!--                <div>-->
+<!--                    <a th:href="@{orders/}+${order.id}+@{/delete}">-->
+<!--                        <i class="fa fa-times"></i>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <a th:href="@{orders/}+${order.id}+@{/edit}">-->
+<!--                        <i class="fa fa-edit"></i>-->
+<!--                    </a>-->
+<!--                </div>-->
 
+<!--            </td>-->
+            <td>
+                <a th:href="@{/orders/edit(id=${order.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
+                <a th:href="@{/orders/delete(id=${order.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
             </td>
         </tr>
         </tbody>

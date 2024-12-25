@@ -22,7 +22,6 @@
         <th th:text="#{object.user.email}"></th>
         <th th:text="#{object.user.password}"></th>
         <th th:text="#{object.client.card}"></th>
-        <th >Operation</th>
     </tr>
     </thead>
     <tbody>
@@ -33,19 +32,14 @@
         <td th:text="${client.password}"/>
         <td th:text="${client.card}"/>
         <td>
-            <div>
-                <a th:href="@{clients/}+${client.id}+@{/delete}">
-                    <span class="icon">
-                          <i class="fa fa-minus"></i>
-                    </span>
-                </a>
-            </div>
+            <a th:href="@{/clients/edit(id=${client.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
+            <a th:href="@{/clients/delete(id=${client.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
         </td>
     </tr>
 
 </tbody>
 </table>
-<a th:href="@{clients/add}" class="btn btn-primary" th:text="#{client.btn.new}">New client</a>
+<a th:href="@{clients/add}" class="btn btn-primary" th:text="#{client.btn.new}"/>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>

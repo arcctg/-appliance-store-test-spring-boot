@@ -23,6 +23,10 @@
     <tr th:each="manufacturer: ${manufacturers}">
         <td th:text="${manufacturer.id}"/>
         <td th:text="${manufacturer.name}"/>
+        <td>
+            <a th:href="@{/manufacturers/edit(id=${manufacturer.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
+            <a th:href="@{/manufacturers/delete(id=${manufacturer.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
+        </td>
     </tr>
 
     </tbody>

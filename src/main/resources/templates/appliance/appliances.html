@@ -27,7 +27,7 @@
             <th th:text="#{object.appliance.characteristic}"></th>
             <th th:text="#{object.appliance.description}"></th>
             <th th:text="#{object.appliance.power}"></th>
-            <th>Price</th>
+            <th th:text="#{object.appliance.price}"></th>
         </tr>
         </thead>
         <tbody>
@@ -42,11 +42,15 @@
             <td th:text="${appliance.description}"/>
             <td><span class="float-end" th:text="${appliance.power}"/></td>
             <td><span class="float-end" th:text="${appliance.price}"/></td>
+            <td>
+                <a th:href="@{/appliances/edit(id=${appliance.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
+                <a th:href="@{/appliances/delete(id=${appliance.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
+            </td>
         </tr>
 
         </tbody>
     </table>
-    <a th:href="@{appliances/add}" class="btn btn-primary" th:text="#{appliance.btn.new}">New appliance</a>
+    <a th:href="@{appliances/add}" class="btn btn-primary" th:text="#{appliance.btn.new}"></a>
 </main>
 <div th:insert="~{footer::footer}"></div>
 </body>

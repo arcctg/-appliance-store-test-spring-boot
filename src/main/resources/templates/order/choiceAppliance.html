@@ -17,12 +17,13 @@
     <h1 th:text="#{appliance.header.list}">Appliances list</h1>
 
     <th:block th:each="appliance: ${appliances}">
-        <form class="store-form" th:action="@{add-into-order}" method="post">
-            <input type="hidden" th:value="${ordersId}" th:name="ordersId">
+        <form class="store-form" th:action="@{add-into-order(ordersId=${ordersId})}" th:object="${orderRow}" method="post">
+<!--            <input type="hidden" th:field="*{ordersId}" th:value="${ordersId}" >-->
+            <input type="hidden" th:field="*{appliance}" th:value="${appliance}"/>
             <input type="hidden" th:value="${appliance.id}" th:name="applianceId">
             <span th:text="${appliance.name}" />
-            <input th:name="numbers" placeholder="Numbers"/>
-            <input th:name="price" th:value="${appliance.price}"/>
+            <input th:name="numbers" th:field="*{number}" placeholder="Numbers"/>
+            <input th:name="price" th:field="*{amount}" th:value="${appliance.price}"/>
             <input type="submit" value="Add">
         </form>
     </th:block>
