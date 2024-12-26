@@ -28,7 +28,8 @@ public class ManufacturerController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "ASC") String order) {
-        model.addAttribute("manufacturers", manufacturerService.getAllManufacturers(PageRequest.of(page, size,
+        model.addAttribute("manufacturers",
+                manufacturerService.getAllManufacturers(PageRequest.of(page, size,
                 Sort.by(Sort.Direction.valueOf(order), sort))));
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);

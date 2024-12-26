@@ -1,14 +1,11 @@
 package com.epam.rd.autocode.assessment.appliances.advice;
 
-import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
-import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
+import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import java.util.List;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {

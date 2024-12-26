@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface ClientService {
     void addClient(Client client);
+
     void updateClient(Client client);
+
     Client getClientById(Long id);
+
     void deleteClientById(Long id);
+
     Page<Client> getAllClients(Pageable pageable);
+
     List<Client> getAllClients();
 }

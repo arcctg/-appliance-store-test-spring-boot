@@ -28,7 +28,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <button class="btn btn-outline-light" data-bs-target="#cartModal" data-bs-toggle="modal"
-                                type="button" th:text="#{cart.header}">
+                                th:text="#{cart.header}" type="button">
                         </button>
                     </li>
                     <li class="nav-item" sec:authorize="isAnonymous()">
@@ -91,7 +91,8 @@
                             </div>
                             <div class="modal-footer">
                                 <a class="btn btn-primary" th:href="@{/cart}" th:text="#{cart.full.header}"></a>
-                                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button" th:text="#{btn.cancel}"/>
+                                <button class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{btn.cancel}"
+                                        type="button"/>
                             </div>
                         </div>
                     </div>

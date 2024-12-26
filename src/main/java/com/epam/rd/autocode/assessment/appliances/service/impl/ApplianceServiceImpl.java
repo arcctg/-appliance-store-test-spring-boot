@@ -21,7 +21,8 @@ public class ApplianceServiceImpl implements ApplianceService {
     private final ManufacturerRepository manufacturerRepository;
 
     @Autowired
-    public ApplianceServiceImpl(ApplianceRepository applianceRepository, ManufacturerRepository manufacturerRepository) {
+    public ApplianceServiceImpl(ApplianceRepository applianceRepository,
+                                ManufacturerRepository manufacturerRepository) {
         this.applianceRepository = applianceRepository;
         this.manufacturerRepository = manufacturerRepository;
     }

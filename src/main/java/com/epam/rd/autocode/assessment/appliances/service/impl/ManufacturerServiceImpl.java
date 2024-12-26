@@ -1,7 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
-import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.ManufacturerRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import org.springframework.beans.BeanUtils;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {

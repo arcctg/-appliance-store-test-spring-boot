@@ -6,8 +6,12 @@ import org.springframework.data.domain.Pageable;
 
 public interface ManufacturerService {
     void addManufacturer(Manufacturer manufacturer);
+
     void updateManufacturer(Manufacturer manufacturer);
+
     Manufacturer getManufacturerById(Long id);
+
     void deleteManufacturerById(Long id);
+
     Page<Manufacturer> getAllManufacturers(Pageable pageable);
 }

@@ -13,25 +13,25 @@
 <div th:insert="~{menunavy::navy}"></div>
 <div class="container mt-4">
     <h1 th:text="#{employee.btn.new}"></h1>
-    <form th:action="@{/employees/add-employee}" th:object="${employee}" method="post">
+    <form method="post" th:action="@{/employees/add-employee}" th:object="${employee}">
         <div class="mb-3">
-            <label for="name" class="form-label" th:text="#{object.user.name}"></label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <label class="form-label" for="name" th:text="#{object.user.name}"></label>
+            <input class="form-control" id="name" required th:field="*{name}" type="text">
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label" th:text="#{object.user.email}"></label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+            <label class="form-label" for="email" th:text="#{object.user.email}"></label>
+            <input class="form-control" id="email" required th:field="*{email}" type="email">
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label" th:text="#{object.user.password}"></label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" required>
+            <label class="form-label" for="password" th:text="#{object.user.password}"></label>
+            <input class="form-control" id="password" required th:field="*{password}" type="password">
         </div>
         <div class="mb-3">
-            <label for="department" class="form-label" th:text="#{object.employee.department}"></label>
-            <input type="text" class="form-control" id="department" th:field="*{department}" required>
+            <label class="form-label" for="department" th:text="#{object.employee.department}"></label>
+            <input class="form-control" id="department" required th:field="*{department}" type="text">
         </div>
         <div class="mb-3">
-            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <input class="btn btn-primary" th:value="#{btn.submit}" type="submit"/>
             <a class="btn btn-secondary" th:href="@{/employees}" th:text="#{btn.cancel}"></a>
         </div>
     </form>

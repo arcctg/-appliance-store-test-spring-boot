@@ -13,31 +13,32 @@
 <div th:insert="~{menunavy::navy}"></div>
 <div class="container mt-4">
     <h1 th:text="#{appliance.btn.new}"></h1>
-    <form th:action="@{/appliances/add-appliance}" th:object="${appliance}" method="post">
+    <form method="post" th:action="@{/appliances/add-appliance}" th:object="${appliance}">
         <div class="mb-3">
-            <label for="name" class="form-label" th:text="#{object.appliance.name}"></label>
-            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <label class="form-label" for="name" th:text="#{object.appliance.name}"></label>
+            <input class="form-control" id="name" required th:field="*{name}" type="text">
         </div>
         <div class="mb-3">
-            <label for="category" class="form-label" th:text="#{object.appliance.category}"></label>
-            <select class="form-select" id="category" th:field="*{category}" required>
-                <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+            <label class="form-label" for="category" th:text="#{object.appliance.category}"></label>
+            <select class="form-select" id="category" required th:field="*{category}">
+                <option th:each="category : ${categories}" th:text="${category}" th:value="${category}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="manufacturer" class="form-label" th:text="#{object.appliance.manufacturer}"></label>
-            <select class="form-select" id="manufacturer" th:field="*{manufacturer}" required>
-                <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer}" th:text="${manufacturer}"></option>
+            <label class="form-label" for="manufacturer" th:text="#{object.appliance.manufacturer}"></label>
+            <select class="form-select" id="manufacturer" required th:field="*{manufacturer}">
+                <option th:each="manufacturer : ${manufacturers}" th:text="${manufacturer}"
+                        th:value="${manufacturer}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="powerType" class="form-label" th:text="#{object.appliance.powerType}"></label>
-            <select class="form-select" id="powerType" th:field="*{powerType}" required>
-                <option th:each="powerType : ${powerTypes}" th:value="${powerType}" th:text="${powerType}"></option>
+            <label class="form-label" for="powerType" th:text="#{object.appliance.powerType}"></label>
+            <select class="form-select" id="powerType" required th:field="*{powerType}">
+                <option th:each="powerType : ${powerTypes}" th:text="${powerType}" th:value="${powerType}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <input class="btn btn-primary" th:value="#{btn.submit}" type="submit"/>
             <a class="btn btn-secondary" th:href="@{/appliances}" th:text="#{btn.cancel}"></a>
         </div>
     </form>

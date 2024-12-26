@@ -24,7 +24,8 @@ public class CatalogController {
     @GetMapping
     public String catalog(Model model,
                           @RequestParam(defaultValue = "0") int page) {
-        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page, 9)));
+        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page,
+                9)));
 
         return "catalog/catalog";
     }

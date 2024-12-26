@@ -13,26 +13,26 @@
 <div th:insert="~{menunavy::navy}"></div>
 <div class="container">
     <h1 th:text="#{client.btn.new}"></h1>
-    <form action="#" th:action="@{edit-client}" th:object="${client}" method="post">
-        <input type="hidden" th:field="*{id}"/>
+    <form action="#" method="post" th:action="@{edit-client}" th:object="${client}">
+        <input th:field="*{id}" type="hidden"/>
         <div class="mb-3">
             <label for="name" th:text="#{object.user.name}"/>
-            <input class="form-control" type="text" id="name" th:field="*{name}" required/>
+            <input class="form-control" id="name" required th:field="*{name}" type="text"/>
         </div>
         <div class="mb-3">
             <label for="email" th:text="#{object.user.email}"></label>
-            <input class="form-control" type="text" id="email" th:field="*{email}" required/>
+            <input class="form-control" id="email" required th:field="*{email}" type="text"/>
         </div>
         <div class="mb-3">
             <label for="password" th:text="#{object.user.password}"></label>
-            <input class="form-control" type="text" id="password" th:field="*{password}" required/>
+            <input class="form-control" id="password" required th:field="*{password}" type="text"/>
         </div>
         <div class="mb-3">
             <label for="card" th:text="#{object.client.card}"></label>
-            <input class="form-control" type="text" id="card" th:field="*{card}" required/>
+            <input class="form-control" id="card" required th:field="*{card}" type="text"/>
         </div>
         <div class="mb-3">
-            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <input class="btn btn-primary" th:value="#{btn.submit}" type="submit"/>
             <a class="btn btn-secondary" th:href="@{/clients}" th:text="#{btn.cancel}"></a>
         </div>
     </form>

@@ -28,7 +28,8 @@ public class ApplianceController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "ASC") String order) {
-        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page, size,
+        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page,
+                size,
                 Sort.by(Sort.Direction.valueOf(order), sort))));
         model.addAttribute("sort", sort);
         model.addAttribute("order", order);

@@ -3,7 +3,6 @@ package com.epam.rd.autocode.assessment.appliances.service.impl;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
 import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
-import com.epam.rd.autocode.assessment.appliances.repository.ApplianceInOrderRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.CartRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;

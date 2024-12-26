@@ -11,12 +11,20 @@ import java.util.List;
 
 public interface ApplianceService {
     void addAppliance(Appliance appliance);
+
     void updateAppliance(Appliance appliance);
+
     Appliance getApplianceById(Long id);
+
     void deleteApplianceById(Long id);
+
     Page<Appliance> getAllAppliances(Pageable pageable);
+
     List<Appliance> getAllAppliances();
+
     Category[] getCategories();
+
     List<Manufacturer> getManufacturers();
+
     PowerType[] getPowerTypes();
 }
