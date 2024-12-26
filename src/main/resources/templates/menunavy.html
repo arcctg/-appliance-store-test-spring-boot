@@ -26,6 +26,11 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            Shopping Cart
+                        </button>
+                    </li>
                     <li class="nav-item" sec:authorize="isAnonymous()">
                         <a class="btn btn-outline-light" th:href="@{/login}" th:text="#{btn.login}">Login</a>
                     </li>
@@ -48,6 +53,47 @@
                         window.location.href = url.toString();
                     }
                 </script>
+
+                <!-- Modal -->
+                <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cartModalLabel">Shopping Cart Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div th:if="${cart.orderRowSet.isEmpty()}">
+                                    <p th:text="#{cart.empty}">Your cart is empty.</p>
+                                </div>
+                                <div th:unless="${cart.orderRowSet.isEmpty()}">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th th:text="#{object.appliance.name}">Appliance</th>
+                                            <th th:text="#{object.appliance.price}">Price</th>
+                                            <th th:text="#{object.orderRow.number}">Quantity</th>
+                                            <th th:text="#{object.orderRow.amount}">Amount</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="orderRow : ${cart.orderRowSet}">
+                                            <td th:text="${orderRow.appliance.name}"></td>
+                                            <td th:text="${orderRow.appliance.price}"></td>
+                                            <td th:text="${orderRow.number}"></td>
+                                            <td th:text="${orderRow.amount}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-primary" th:href="@{/cart}">View Full Cart</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
