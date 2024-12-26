@@ -7,39 +7,94 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link th:href="@{/styles/css/main.css}" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles/css/main.css}"/>
     <title>Clients list</title>
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{client.header.list}"></h1>
-<table class="table table-hover">
-    <thead>
-    <tr class="table-dark">
-        <th th:text="#{object.user.id}"></th>
-        <th th:text="#{object.user.name}"></th>
-        <th th:text="#{object.user.email}"></th>
-        <th th:text="#{object.user.password}"></th>
-        <th th:text="#{object.client.card}"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="client: ${clients}">
-        <td th:text="${client.id}"/>
-        <td th:text="${client.name}"/>
-        <td th:text="${client.email}"/>
-        <td th:text="${client.password}"/>
-        <td th:text="${client.card}"/>
-        <td>
-            <a th:href="@{/clients/edit(id=${client.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
-            <a th:href="@{/clients/delete(id=${client.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
-        </td>
-    </tr>
+<div class="container">
+    <h1 th:text="#{client.header.list}"></h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr class="table-dark">
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/clients(page=${clients.number}, sort='id', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.id}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'id' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/clients(page=${clients.number}, sort='name', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.name}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'name' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/clients(page=${clients.number}, sort='email', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.email}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'email' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/clients(page=${clients.number}, sort='password', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.password}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'password' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th th:text="#{object.client.card}">
+                <a th:href="@{/clients(page=${clients.number}, sort='card', order=${sort == 'card' and order == 'asc' ? 'desc' : 'asc'})}"
+                   th:text="#{object.client.card}"></a>
+            </th>
+            <th th:text="#{object.operations}"/>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client: ${clients}">
+            <td th:text="${client.id}"/>
+            <td th:text="${client.name}"/>
+            <td th:text="${client.email}"/>
+            <td th:text="${client.password}"/>
+            <td th:text="${client.card}"/>
+            <td>
+                <a class="btn btn-warning btn-sm" th:href="@{/clients/edit(id=${client.id})}" th:text="#{btn.edit}"/>
+                <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this object?');"
+                   th:href="@{/clients/delete(id=${client.id})}" th:text="#{btn.delete}"/>
+            </td>
+        </tr>
 
-</tbody>
-</table>
-<a th:href="@{clients/add}" class="btn btn-primary" th:text="#{client.btn.new}"/>
+        </tbody>
+    </table>
+    <a class="btn btn-primary mb-3" th:href="@{clients/add}" th:text="#{client.btn.new}"/>
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/clients(page=${clients.number - 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-left"></i>
+                    </span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i == clients.number} ? 'active' : ''"
+                th:each="i : ${#numbers.sequence(0, clients.totalPages - 1)}">
+                <a class="page-link" th:href="@{/clients(page=${i}, sort=${sort}, order=${order})}"
+                   th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${clients.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/clients(page=${clients.number + 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-right"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>

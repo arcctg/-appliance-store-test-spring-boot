@@ -25,11 +25,14 @@ public class ClientController {
     public String getAllClients(
             Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "id") String sort) {
-        size = size == null ? clientService.getClientsSize() : size;
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") String order) {
+        //size = size == null ? clientService.getClientsSize() : size;
         model.addAttribute("clients", clientService.getAllClients(PageRequest.of(page, size,
-                Sort.by(sort))));
+                Sort.by(Sort.Direction.valueOf(order), sort))));
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
 
         return "client/clients";
     }

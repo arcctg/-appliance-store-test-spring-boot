@@ -11,34 +11,31 @@
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{client.btn.new}"></h1>
-<form action="#" th:action="@{add-client}" th:object="${client}" method="post">
-    <p>
-        <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:text="#{user.name.is.mandatory}"></p>
-        <span th:text="#{object.user.name}">
-        </span> <input type="text" th:field="*{name}"/>
-    </p>
-    <p>
-        <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:text="#{user.email.is.correctly}"></p>
-        <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:text="#{user.email.is.blank}"></p>
-        <span th:text="#{object.user.email}"></span>
-        <input type="text" th:field="*{email}"/>
-    </p>
-    <p>
-        <p th:if="${#fields.hasErrors('password')}" class="text-danger" th:text="#{user.password.is.correctly}">Invalid password</p>
-        <span th:text="#{object.user.password}"></span>
-        <input type="text" th:field="*{password}"/>
-    </p>
-    <p>
-        <p th:if="${#fields.hasErrors('card')}" class="text-danger">Invalid card</p>
-        <span th:text="#{object.client.card}"></span>
-        <input type="text" th:field="*{card}"/>
-    </p>
-    <div>
-        <input type="submit" th:value="#{btn.submit}"/>
-        <input type="reset" th:value="#{btn.reset}"/>
-    </div>
-</form>
+<div class="container">
+    <h1 th:text="#{client.btn.new}"></h1>
+    <form action="#" th:action="@{add-client}" th:object="${client}" method="post">
+        <div class="mb-3">
+            <label for="name" th:text="#{object.user.name}"/>
+            <input class="form-control" type="text" id="name" th:field="*{name}" required/>
+        </div>
+        <div class="mb-3">
+            <label for="email" th:text="#{object.user.email}"></label>
+            <input class="form-control" type="text" id="email" th:field="*{email}" required/>
+        </div>
+        <div class="mb-3">
+            <label for="password" th:text="#{object.user.password}"></label>
+            <input class="form-control" type="text" id="password" th:field="*{password}" required/>
+        </div>
+        <div class="mb-3">
+            <label for="card" th:text="#{object.client.card}"></label>
+            <input class="form-control" type="text" id="card" th:field="*{card}" required/>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <a class="btn btn-secondary" th:href="@{/clients}" th:text="#{btn.cancel}"></a>
+        </div>
+    </form>
+</div>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>
