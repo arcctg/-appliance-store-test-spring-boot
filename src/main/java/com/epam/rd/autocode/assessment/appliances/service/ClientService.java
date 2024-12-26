@@ -13,5 +13,4 @@ public interface ClientService {
     void deleteClientById(Long id);
     Page<Client> getAllClients(Pageable pageable);
     List<Client> getAllClients();
-    int getClientsSize();
 }

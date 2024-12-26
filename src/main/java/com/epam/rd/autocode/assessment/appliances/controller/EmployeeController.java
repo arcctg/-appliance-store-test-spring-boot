@@ -25,11 +25,13 @@ public class EmployeeController {
     public String getAllEmployees(
             Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "id") String sort) {
-        size = size == null ? employeeService.getEmployeesSize() : size;
+            @RequestParam(defaultValue = "5") Integer size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") String order) {
         model.addAttribute("employees", employeeService.getAllEmployees(PageRequest.of(page, size,
-                Sort.by(sort))));
+                Sort.by(Sort.Direction.valueOf(order), sort))));
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
 
         return "employee/employees";
     }

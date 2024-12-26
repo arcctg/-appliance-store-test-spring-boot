@@ -11,18 +11,31 @@
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{employee.btn.new}"></h1>
-<form action="#" th:action="@{edit-employee}" th:object="${employee}" method="post">
-    <input type="hidden" th:field="*{id}"/>
-    <p><span th:text="#{object.user.name}"></span> <input type="text" th:field="*{name}"/></p>
-    <p><span th:text="#{object.user.email}"></span> <input type="text" th:field="*{email}"/></p>
-    <p><span th:text="#{object.user.password}"></span> <input type="text" th:field="*{password}"/></p>
-    <p><span th:text="#{object.employee.department}"></span> <input type="text" th:field="*{department}"/></p>
-    <div>
-        <input type="submit" th:value="#{btn.submit}"/>
-        <input type="reset" th:value="#{btn.reset}"/>
-    </div>
-</form>
+<div class="container mt-4">
+    <h1 th:text="#{employee.btn.new}"></h1>
+    <form th:action="@{/employees/edit-employee}" th:object="${employee}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label" th:text="#{object.user.name}"></label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{object.user.email}"></label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label" th:text="#{object.user.password}"></label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" required>
+        </div>
+        <div class="mb-3">
+            <label for="department" class="form-label" th:text="#{object.employee.department}"></label>
+            <input type="text" class="form-control" id="department" th:field="*{department}" required>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <a class="btn btn-secondary" th:href="@{/employees}" th:text="#{btn.cancel}"></a>
+        </div>
+    </form>
+</div>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>

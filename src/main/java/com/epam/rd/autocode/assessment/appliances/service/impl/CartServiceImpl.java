@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -43,6 +44,28 @@ public class CartServiceImpl implements CartService {
         orderRow.setAmount(BigDecimal.valueOf(number).multiply(appliance.getPrice()));
         cart.getOrderRowSet().add(orderRow);
 
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void editItemInCart(Long orderId, Long number) {
+        Cart cart = getCurrentUserCart();
+        Optional<OrderRow> orderRowOptional = cart.getOrderRowSet().stream()
+                .filter(orderRow -> orderRow.getId().equals(orderId))
+                .findFirst();
+
+        if (orderRowOptional.isPresent()) {
+            OrderRow orderRow = orderRowOptional.get();
+            orderRow.setNumber(number);
+            orderRow.setAmount(BigDecimal.valueOf(number).multiply(orderRow.getAppliance().getPrice()));
+            cartRepository.save(cart);
+        }
+    }
+
+    @Override
+    public void deleteItemFromCart(Long orderId) {
+        Cart cart = getCurrentUserCart();
+        cart.getOrderRowSet().removeIf(orderRow -> orderRow.getId().equals(orderId));
         cartRepository.save(cart);
     }
 }

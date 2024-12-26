@@ -25,11 +25,13 @@ public class ApplianceController {
     public String getAllAppliances(
             Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(defaultValue = "id") String sort) {
-        size = size == null ? applianceService.getAppliancesSize() : size;
-        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page,
-                size, Sort.by(sort))));
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "ASC") String order) {
+        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page, size,
+                Sort.by(Sort.Direction.valueOf(order), sort))));
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
 
         return "appliance/appliances";
     }

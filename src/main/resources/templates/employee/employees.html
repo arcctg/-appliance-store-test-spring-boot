@@ -8,38 +8,79 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link th:href="@{/styles/css/main.css}" rel="stylesheet"/>
     <title>Employees list</title>
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{employee.header.list}"></h1>
-<table class="table table-hover">
-    <thead>
-    <tr class="table-dark">
-        <th th:text="#{object.user.id}"></th>
-        <th th:text="#{object.user.name}"></th>
-        <th th:text="#{object.user.email}"></th>
-        <th th:text="#{object.user.password}"></th>
-        <th th:text="#{object.employee.department}"></th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="container">
+    <h1 th:text="#{employee.header.list}"></h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr class="table-dark">
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/employees(page=${employees.number}, sort='id', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.id}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'id' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/employees(page=${employees.number}, sort='name', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.name}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'name' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/employees(page=${employees.number}, sort='email', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:text="#{object.user.email}"/>
+                <i class="fa"
+                   th:classappend="${sort == 'email' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+            </th>
+            <th th:text="#{object.operations}"/>
+        </tr>
+        </thead>
+        <tbody>
         <tr th:each="employee: ${employees}">
             <td th:text="${employee.id}"/>
             <td th:text="${employee.name}"/>
             <td th:text="${employee.email}"/>
-            <td th:text="${employee.password}"/>
-            <td th:text="${employee.department}"/>
             <td>
-                <a th:href="@{/employees/edit(id=${employee.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
-                <a th:href="@{/employees/delete(id=${employee.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
+                <a class="btn btn-warning btn-sm" th:href="@{/employees/edit(id=${employee.id})}" th:text="#{btn.edit}"/>
+                <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this object?');"
+                   th:href="@{/employees/delete(id=${employee.id})}" th:text="#{btn.delete}"/>
             </td>
         </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-primary mb-3" th:href="@{employees/add}" th:text="#{employee.btn.new}"/>
 
-    </tbody>
-</table>
-<a th:href="@{employees/add}" class="btn btn-primary" th:text="#{employee.btn.new}">New employee</a>
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${employees.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/employees(page=${employees.number - 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-left"></i>
+                    </span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i == employees.number} ? 'active' : ''"
+                th:each="i : ${#numbers.sequence(0, employees.totalPages - 1)}">
+                <a class="page-link" th:href="@{/employees(page=${i}, sort=${sort}, order=${order})}"
+                   th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${employees.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/employees(page=${employees.number + 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-right"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>

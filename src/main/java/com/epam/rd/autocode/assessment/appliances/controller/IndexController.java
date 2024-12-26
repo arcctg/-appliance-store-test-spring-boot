@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class IndexController {
     @Loggable
-    @GetMapping()
+    @GetMapping({"", "index"})
     public String home() {
-        return "index";
+        return "redirect:/catalog";
     }
 }

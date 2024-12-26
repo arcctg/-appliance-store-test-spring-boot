@@ -52,8 +52,4 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findAll();
     }
 
-    @Override
-    public int getClientsSize() {
-        return (int) clientRepository.count();
-    }
 }

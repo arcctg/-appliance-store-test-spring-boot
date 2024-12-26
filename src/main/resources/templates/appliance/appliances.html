@@ -7,6 +7,7 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <title>Title</title>
 </head>
 <body>
@@ -14,43 +15,67 @@
     <div th:insert="~{menunavy::navy}"></div>
 </header>
 <main>
-    <h1 th:text="#{appliance.header.list}">Appliances list</h1>
-    <table class="table table-hover">
-        <thead>
-        <tr class="table-dark">
-            <th th:text="#{object.appliance.id}"></th>
-            <th th:text="#{object.appliance.name}"></th>
-            <th th:text="#{object.appliance.category}"></th>
-            <th th:text="#{object.appliance.model}"></th>
-            <th th:text="#{object.appliance.manufacturer}"></th>
-            <th th:text="#{object.appliance.powerType}"></th>
-            <th th:text="#{object.appliance.characteristic}"></th>
-            <th th:text="#{object.appliance.description}"></th>
-            <th th:text="#{object.appliance.power}"></th>
-            <th th:text="#{object.appliance.price}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="appliance: ${appliances}">
-            <td><span class="float-end" th:text="${appliance.id}"/></td>
-            <td th:text="${appliance.name}"/>
-            <td><span class="float-end" th:text="${appliance.category}"/></td>
-            <td th:text="${appliance.model}"/>
-            <td><span class="float-end" th:text="${appliance.manufacturer.getName()}"/></td>
-            <td th:text="${appliance.powerType}"/>
-            <td th:text="${appliance.characteristic}"/>
-            <td th:text="${appliance.description}"/>
-            <td><span class="float-end" th:text="${appliance.power}"/></td>
-            <td><span class="float-end" th:text="${appliance.price}"/></td>
-            <td>
-                <a th:href="@{/appliances/edit(id=${appliance.id})}" class="btn btn-primary" th:text="#{btn.edit}"/>
-                <a th:href="@{/appliances/delete(id=${appliance.id})}" class="btn btn-primary" th:text="#{btn.delete}"/>
-            </td>
-        </tr>
+    <div class="container">
+        <h1 th:text="#{appliance.header.list}"></h1>
+        <table class="table table-bordered">
+            <thead>
+            <tr class="table-dark">
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='id', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.id}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'id' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='name', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.name}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'name' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th th:text="#{object.operations}"/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="appliance: ${appliances}">
+                <td th:text="${appliance.id}"/>
+                <td th:text="${appliance.name}"/>
+                <td>
+                    <a class="btn btn-warning btn-sm" th:href="@{/appliances/edit(id=${appliance.id})}" th:text="#{btn.edit}"/>
+                    <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this object?');"
+                       th:href="@{/appliances/delete(id=${appliance.id})}" th:text="#{btn.delete}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-primary mb-3" th:href="@{appliances/add}" th:text="#{appliance.btn.new}"/>
 
-        </tbody>
-    </table>
-    <a th:href="@{appliances/add}" class="btn btn-primary" th:text="#{appliance.btn.new}"></a>
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${appliances.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{/appliances(page=${appliances.number - 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-left"></i>
+                    </span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i == appliances.number} ? 'active' : ''"
+                    th:each="i : ${#numbers.sequence(0, appliances.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/appliances(page=${i}, sort=${sort}, order=${order})}"
+                       th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${appliances.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{/appliances(page=${appliances.number + 1}, sort=${sort}, order=${order})}">
+                    <span class="icon">
+                        <i class="fa fa-chevron-right"></i>
+                    </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </main>
 <div th:insert="~{footer::footer}"></div>
 </body>

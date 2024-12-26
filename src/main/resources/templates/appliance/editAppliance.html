@@ -11,76 +11,37 @@
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<h1 th:text="#{appliance.header.edit}"></h1>
-<form th:action="@{/appliances/edit-appliance}" th:object="${appliance}" method="post">
-    <p style="display: none;">
-        <input type="number" th:field="*{id}" readonly/>
-    </p>
-    <p>
-    <p th:if="${#fields.hasErrors('name')}" class="text-danger">Invalid name</p>
-    <span th:text="#{object.appliance.name}"></span>
-    <input type="text" th:field="*{name}" required/>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('category')}" class="text-danger">Invalid category</p>
-    <span th:text="#{object.appliance.category}"></span>
-    <select th:field="*{category}" required>
-        <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
-    </select>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('model')}" class="text-danger">Invalid model</p>
-    <span th:text="#{object.appliance.model}"></span>
-    <input type="text" th:field="*{model}" required/>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('manufacturer')}" class="text-danger">Invalid manufacturer</p>
-    <span th:text="#{object.appliance.manufacturer}"></span>
-    <select th:field="*{manufacturer}" required>
-        <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.getId()}" th:text="${manufacturer.getName()}"></option>
-    </select>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('powerType')}" class="text-danger">Invalid power type</p>
-    <span th:text="#{object.appliance.powerType}"></span>
-    <select th:field="*{powerType}" required>
-        <option th:each="powerType : ${powerTypes}" th:value="${powerType}" th:text="${powerType}"></option>
-    </select>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('characteristic')}" class="text-danger">Invalid characteristic</p>
-    <span th:text="#{object.appliance.characteristic}"></span>
-    <input type="text" th:field="*{characteristic}" required/>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('description')}" class="text-danger">Invalid description</p>
-    <span th:text="#{object.appliance.description}"></span>
-    <input type="text" th:field="*{description}" required/>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('power')}" class="text-danger">Invalid power</p>
-    <span th:text="#{object.appliance.power}"></span>
-    <input type="number" th:field="*{power}" required/>
-    </p>
-
-    <p>
-    <p th:if="${#fields.hasErrors('price')}" class="text-danger">Invalid price</p>
-    <span th:text="#{object.appliance.price}"></span>
-    <input type="number" th:field="*{price}" required/>
-    </p>
-
-    <div>
-        <input type="submit" th:value="#{btn.submit}"/>
-        <input type="reset" th:value="#{btn.reset}"/>
-    </div>
-</form>
+<div class="container mt-4">
+    <h1 th:text="#{appliance.header.edit}"></h1>
+    <form th:action="@{/appliances/edit-appliance}" th:object="${appliance}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label" th:text="#{object.appliance.name}"></label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label" th:text="#{object.appliance.category}"></label>
+            <select class="form-select" id="category" th:field="*{category}" required>
+                <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="manufacturer" class="form-label" th:text="#{object.appliance.manufacturer}"></label>
+            <select class="form-select" id="manufacturer" th:field="*{manufacturer}" required>
+                <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.getId()}" th:text="${manufacturer.getId()}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="powerType" class="form-label" th:text="#{object.appliance.powerType}"></label>
+            <select class="form-select" id="powerType" th:field="*{powerType}" required>
+                <option th:each="powerType : ${powerTypes}" th:value="${powerType}" th:text="${powerType}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" th:value="#{btn.submit}"/>
+            <a class="btn btn-secondary" th:href="@{/appliances}" th:text="#{btn.cancel}"></a>
+        </div>
+    </form>
+</div>
 <div th:insert="~{footer::footer}"></div>
 </body>
 </html>

@@ -12,3 +12,15 @@ INSERT INTO appliance (name, category, model, manufacturer_id, power_type, chara
     VALUES ('Ancile', 'SMALL', '-----',6,'AC220','--------','-----',230, 6.01);
 INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
     VALUES ('Halo', 'BIG', '-----',7,'ACCUMULATOR','--------','-----',300, 7.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+    VALUES ('Blaze', 'BIG', '-----',7,'AC110','--------','-----',1500, 8.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+    VALUES ('Storm', 'BIG', '-----',7,'AC220','--------','-----',1800, 9.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+        VALUES ('Zephyr', 'SMALL', '-----',7,'ACCUMULATOR','--------','-----',500, 10.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+    VALUES ('Cyclone', 'BIG', '-----',7,'AC110','--------','-----',2500, 11.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+    VALUES ('Tempest', 'BIG', '-----',7,'AC220','--------','-----',2000, 12.01);
+INSERT INTO appliance (name, category, model, manufacturer_id, power_type, characteristic, description, power, price)
+    VALUES ('Vortex', 'SMALL', '-----',7,'ACCUMULATOR','--------','-----',700, 13.01);
