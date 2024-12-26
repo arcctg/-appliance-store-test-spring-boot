@@ -34,6 +34,55 @@
                     <i class="fa"
                        th:classappend="${sort == 'name' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
                 </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='category', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.category}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'category' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='manufacturer', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.manufacturer}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'manufacturer' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='powerType', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.powerType}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'powerType' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='characteristic', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.characteristic}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'characteristic' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='description', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.description}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'description' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='power', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.power}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'power' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/appliances(page=${appliances.number}, sort='price', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                       th:text="#{object.appliance.price}"/>
+                    <i class="fa"
+                       th:classappend="${sort == 'price' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                </th>
                 <th th:text="#{object.operations}"/>
             </tr>
             </thead>
@@ -41,6 +90,13 @@
             <tr th:each="appliance: ${appliances}">
                 <td th:text="${appliance.id}"/>
                 <td th:text="${appliance.name}"/>
+                <td th:text="${appliance.category}"/>
+                <td th:text="${appliance.manufacturer.getName()}"/>
+                <td th:text="${appliance.powerType}"/>
+                <td th:text="${appliance.characteristic}"/>
+                <td th:text="${appliance.description}"/>
+                <td th:text="${appliance.power}"/>
+                <td th:text="${appliance.price}"/>
                 <td>
                     <a class="btn btn-warning btn-sm" th:href="@{/appliances/edit(id=${appliance.id})}"
                        th:text="#{btn.edit}"/>

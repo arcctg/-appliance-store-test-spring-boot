@@ -43,7 +43,6 @@ public class SecurityConfig {
                         .requestMatchers("/", "/catalog").permitAll()
                         .requestMatchers("/employees/**", "/clients/**", "/appliances/**",
                                 "/manufacturers/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/orders/**").hasAnyRole("EMPLOYEE", "CLIENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
