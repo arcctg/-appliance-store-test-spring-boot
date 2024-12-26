@@ -28,7 +28,6 @@ public class ClientController {
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "ASC") String order) {
-        //size = size == null ? clientService.getClientsSize() : size;
         model.addAttribute("clients", clientService.getAllClients(PageRequest.of(page, size,
                 Sort.by(Sort.Direction.valueOf(order), sort))));
         model.addAttribute("sort", sort);
