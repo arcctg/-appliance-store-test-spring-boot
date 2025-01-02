@@ -1,7 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.controller;
 
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
-import com.epam.rd.autocode.assessment.appliances.model.Cart;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,11 +44,5 @@ public class CartController {
     public String deleteItemFromCart(@RequestParam Long orderId) {
         cartService.deleteItemFromCart(orderId);
         return "redirect:/cart";
-    }
-
-    @Loggable
-    @ModelAttribute("cart")
-    public Cart getCart() {
-        return cartService.getCurrentUserCart();
     }
 }

@@ -34,9 +34,7 @@ public class ApplianceServiceImpl implements ApplianceService {
 
     @Override
     public void updateAppliance(Appliance appliance) {
-        Appliance applianceToUpdate = getApplianceById(appliance.getId());
-        BeanUtils.copyProperties(appliance, applianceToUpdate, "id");
-        applianceRepository.save(applianceToUpdate);
+        applianceRepository.save(appliance);
     }
 
     @Override

@@ -13,4 +13,9 @@ public class IndexController {
     public String home() {
         return "redirect:/catalog";
     }
+
+    @GetMapping("login")
+    public String login() {
+        return "login";
+    }
 }

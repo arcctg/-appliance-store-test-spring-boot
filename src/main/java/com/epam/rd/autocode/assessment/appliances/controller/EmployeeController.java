@@ -44,24 +44,16 @@ public class EmployeeController {
     }
 
     @Loggable
-    @PostMapping("/add-employee")
-    public String addEmployee(@ModelAttribute Employee employee) {
-        employeeService.addEmployee(employee);
-        return "redirect:/employees";
-    }
-
-    @Loggable
     @GetMapping("/edit")
     public String editEmployeeForm(@RequestParam("id") Long id, Model model) {
-        Employee employee = employeeService.getEmployeeById(id);
-        model.addAttribute("employee", employee);
+        model.addAttribute("employee", employeeService.getEmployeeById(id));
         return "employee/editEmployee";
     }
 
     @Loggable
-    @PostMapping("/edit-employee")
-    public String editEmployee(@ModelAttribute Employee employee) {
-        employeeService.updateEmployee(employee);
+    @PostMapping({"/add-employee", "/edit-employee"})
+    public String saveEmployee(@ModelAttribute Employee employee) {
+        employeeService.saveEmployee(employee);
         return "redirect:/employees";
     }
 

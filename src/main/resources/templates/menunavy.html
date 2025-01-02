@@ -65,10 +65,10 @@
                                         type="button"></button>
                             </div>
                             <div class="modal-body">
-                                <div th:if="${cart.orderRowSet.isEmpty()}">
+                                <div th:if="${cart == null || cart.orderRowSet.isEmpty()}">
                                     <p th:text="#{cart.empty}">Your cart is empty.</p>
                                 </div>
-                                <div th:unless="${cart.orderRowSet.isEmpty()}">
+                                <div th:unless="${cart != null && cart.orderRowSet.isEmpty()}">
                                     <table class="table">
                                         <thead>
                                         <tr>

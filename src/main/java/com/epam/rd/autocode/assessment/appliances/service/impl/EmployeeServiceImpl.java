@@ -1,9 +1,9 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import com.epam.rd.autocode.assessment.appliances.exception.UserNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.repository.EmployeeRepository;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,21 +21,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void addEmployee(Employee employee) {
+    public void saveEmployee(Employee employee) {
         employeeRepository.save(employee);
     }
 
     @Override
-    public void updateEmployee(Employee employee) {
-        Employee employeeToUpdate = getEmployeeById(employee.getId());
-        BeanUtils.copyProperties(employee, employeeToUpdate, "id");
-        employeeRepository.save(employeeToUpdate);
-    }
-
-    @Override
     public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee " +
-                "not found"));
+        return employeeRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("Employee with id %d not found".formatted(id)));
     }
 
     @Override
@@ -47,10 +40,4 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Page<Employee> getAllEmployees(Pageable pageable) {
         return employeeRepository.findAll(pageable);
     }
-
-    @Override
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
-    }
-
 }

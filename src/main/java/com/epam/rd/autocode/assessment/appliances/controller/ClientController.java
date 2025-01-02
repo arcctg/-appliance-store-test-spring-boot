@@ -3,9 +3,8 @@ package com.epam.rd.autocode.assessment.appliances.controller;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
     private final ClientService clientService;
 
-    @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
@@ -24,14 +22,9 @@ public class ClientController {
     @GetMapping
     public String getAllClients(
             Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") String order) {
-        model.addAttribute("clients", clientService.getAllClients(PageRequest.of(page, size,
-                Sort.by(Sort.Direction.valueOf(order), sort))));
-        model.addAttribute("sort", sort);
-        model.addAttribute("order", order);
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+        model.addAttribute("clients", clientService.getAllClients(pageable));
+        model.addAttribute("pageable", pageable);
 
         return "client/clients";
     }
@@ -44,24 +37,16 @@ public class ClientController {
     }
 
     @Loggable
-    @PostMapping("/add-client")
-    public String addClient(@ModelAttribute Client client) {
-        clientService.addClient(client);
-        return "redirect:/clients";
-    }
-
-    @Loggable
     @GetMapping("/edit")
     public String editClientForm(@RequestParam("id") Long id, Model model) {
-        Client client = clientService.getClientById(id);
-        model.addAttribute("client", client);
+        model.addAttribute("client", clientService.getClientById(id));
         return "client/editClient";
     }
 
     @Loggable
-    @PostMapping("/edit-client")
-    public String editClient(@ModelAttribute Client client) {
-        clientService.updateClient(client);
+    @PostMapping({"/add-client", "/edit-client"})
+    public String saveClient(@ModelAttribute Client client) {
+        clientService.saveClient(client);
         return "redirect:/clients";
     }
 

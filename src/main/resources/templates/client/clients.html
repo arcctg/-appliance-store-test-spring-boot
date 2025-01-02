@@ -12,42 +12,38 @@
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<div class="container">
+<div class="container" th:with="sort=${pageable.getSort().toString().replace(': ', ',')}, order=${sort.contains('ASC')}">
     <h1 th:text="#{client.header.list}"></h1>
     <table class="table table-bordered">
         <thead>
         <tr class="table-dark">
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='id', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='id,'+ ${order ? 'DESC' : 'ASC'})}"
                    th:text="#{object.user.id}"/>
                 <i class="fa"
-                   th:classappend="${sort == 'id' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                   th:classappend="${sort.contains('id') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='name', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='name,' + ${order ? 'DESC' : 'ASC'})}"
                    th:text="#{object.user.name}"/>
                 <i class="fa"
-                   th:classappend="${sort == 'name' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                   th:classappend="${sort.contains('name') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='email', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='email,' + ${order ? 'DESC' : 'ASC'})}"
                    th:text="#{object.user.email}"/>
                 <i class="fa"
-                   th:classappend="${sort == 'email' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                   th:classappend="${sort.contains('email') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='password', order=${order == 'ASC' ? 'DESC' : 'ASC'})}"
-                   th:text="#{object.user.password}"/>
-                <i class="fa"
-                   th:classappend="${sort == 'password' ? (order == 'ASC' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
-            </th>
-            <th th:text="#{object.client.card}">
-                <a th:href="@{/clients(page=${clients.number}, sort='card', order=${sort == 'card' and order == 'asc' ? 'desc' : 'asc'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='card,' + ${order ? 'DESC' : 'ASC'})}"
                    th:text="#{object.client.card}"></a>
+                <i class="fa"
+                   th:classappend="${sort.contains('card') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
             </th>
             <th th:text="#{object.operations}"/>
         </tr>
@@ -57,8 +53,7 @@
             <td th:text="${client.id}"/>
             <td th:text="${client.name}"/>
             <td th:text="${client.email}"/>
-            <td th:text="${client.password}"/>
-            <td th:text="${client.card}"/>
+            <td th:text="${client.card.replaceAll('\d', '*')}"/>
             <td>
                 <a class="btn btn-warning btn-sm" th:href="@{/clients/edit(id=${client.id})}" th:text="#{btn.edit}"/>
                 <a class="btn btn-danger btn-sm"
@@ -75,7 +70,7 @@
     <div class="d-flex justify-content-center">
         <ul class="pagination">
             <li class="page-item" th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/clients(page=${clients.number - 1}, sort=${sort}, order=${order})}">
+                <a class="page-link" th:href="@{/clients(page=${clients.number - 1}, sort=${sort})}">
                     <span class="icon">
                         <i class="fa fa-chevron-left"></i>
                     </span>
@@ -83,11 +78,11 @@
             </li>
             <li class="page-item" th:classappend="${i == clients.number} ? 'active' : ''"
                 th:each="i : ${#numbers.sequence(0, clients.totalPages - 1)}">
-                <a class="page-link" th:href="@{/clients(page=${i}, sort=${sort}, order=${order})}"
+                <a class="page-link" th:href="@{/clients(page=${i}, sort=${sort})}"
                    th:text="${i + 1}"></a>
             </li>
             <li class="page-item" th:classappend="${clients.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{/clients(page=${clients.number + 1}, sort=${sort}, order=${order})}">
+                <a class="page-link" th:href="@{/clients(page=${clients.number + 1}, sort=${sort})}">
                     <span class="icon">
                         <i class="fa fa-chevron-right"></i>
                     </span>
