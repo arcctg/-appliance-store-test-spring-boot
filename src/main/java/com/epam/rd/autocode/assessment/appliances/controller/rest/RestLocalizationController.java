@@ -2,6 +2,7 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +21,11 @@ public class RestLocalizationController {
     }
 
     @PostMapping("")
-    public String changeLanguage(@RequestParam("lang") String lang, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> changeLanguage(@RequestParam("lang") String lang,
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response) {
         Locale locale = new Locale(lang);
         localeResolver.setLocale(request, response, locale);
-        return "Language changed to " + lang;
+        return ResponseEntity.ok("Language changed to " + lang);
     }
 }

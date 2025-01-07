@@ -3,6 +3,7 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,27 +17,28 @@ public class RestCartController {
 
     @Loggable
     @GetMapping
-    public Cart viewCart() {
-        return cartService.getCurrentUserCart();
+    public ResponseEntity<Cart> viewCart() {
+        return ResponseEntity.ok(cartService.getCurrentUserCart());
     }
 
     @Loggable
     @PostMapping("/add-item/{id}")
-    public String addItemToCart(@PathVariable Long id, @RequestParam Long number) {
+    public ResponseEntity<String> addItemToCart(@PathVariable Long id, @RequestParam Long number) {
         cartService.addItemToCart(id, number);
-        return "Item added to cart";
+        return ResponseEntity.ok("Item added to cart");
     }
 
     @Loggable
     @PostMapping("/edit-item/{id}")
-    public String editItemInCart(@PathVariable Long id, @RequestParam Long number) {
+    public ResponseEntity<String> editItemInCart(@PathVariable Long id, @RequestParam Long number) {
         cartService.editItemInCart(id, number);
-        return "Item edited in cart";
+        return ResponseEntity.ok("Item edited in cart");
     }
 
     @Loggable
     @DeleteMapping("/delete-item/{id}")
-    public void deleteItemFromCart(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItemFromCart(@PathVariable Long id) {
         cartService.deleteItemFromCart(id);
+        return ResponseEntity.noContent().build();
     }
 }

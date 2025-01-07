@@ -6,6 +6,7 @@ import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,32 +20,35 @@ public class RestClientController {
 
     @Loggable
     @GetMapping
-    public Page<Client> getAllClients(@PageableDefault(size = 5, sort = "id") Pageable pageable) {
-        return clientService.getAllClients(pageable);
+    public ResponseEntity<Page<Client>> getAllClients(
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(clientService.getAllClients(pageable));
     }
 
     @Loggable
     @PostMapping
-    public Client addClient(@RequestBody Client client) {
-        return clientService.saveClient(client);
+    public ResponseEntity<Client> addClient(@RequestBody Client client) {
+        return ResponseEntity.ok(clientService.saveClient(client));
     }
 
     @Loggable
     @PutMapping("/{id}")
-    public Client editClient(@PathVariable Long id, @RequestBody Client client) {
+    public ResponseEntity<Client> editClient(@PathVariable Long id, @RequestBody Client client) {
         client.setId(id);
-        return clientService.saveClient(client);
+        return ResponseEntity.ok(clientService.saveClient(client));
     }
 
     @Loggable
     @PatchMapping("/{id}/toggle")
-    public void toggleClient(@PathVariable Long id) {
+    public ResponseEntity<Void> toggleClient(@PathVariable Long id) {
         clientService.toggleClientBlockById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Loggable
     @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         clientService.deleteClientById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -43,12 +43,14 @@ public class RestGlobalExceptionHandlerAdvice {
 
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException ex) {
-        return new ResponseEntity<>(getErrorMessage(ex.getMostSpecificCause()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(getErrorMessage(ex.getMostSpecificCause()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGlobalException(Exception ex) {
-        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String getErrorMessage(Throwable throwable) {

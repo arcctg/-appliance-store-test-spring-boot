@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,27 +16,29 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class RestAuthController {
 
+    @Loggable
     @PostMapping("/login")
-    public String login(@Valid @RequestBody AuthenticationRequest form, HttpServletRequest request) {
+    public ResponseEntity<String> login(@Valid @RequestBody AuthenticationRequest form,
+                                        HttpServletRequest request) {
         try {
             request.login(form.getUsername(), form.getPassword());
         } catch (ServletException e) {
-            throw new RuntimeException("Invalid username or password");
+            return ResponseEntity.status(401).body("Invalid username or password");
         }
 
-        return "Login successful!";
+        return ResponseEntity.ok("Login successful!");
     }
 
     @Loggable
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) throws ServletException {
+    public ResponseEntity<String> logout(HttpServletRequest request) throws ServletException {
         if (request.getUserPrincipal() == null) {
-            throw new RuntimeException("No user is currently logged in!");
+            return ResponseEntity.status(400).body("No user is currently logged in!");
         } else {
             request.logout();
         }
 
-        return "Logout successful!";
+        return ResponseEntity.ok("Logout successful!");
     }
 
     @Loggable

@@ -16,7 +16,8 @@ public class Employee extends CustomUser {
     @Size(max = 100, message = "Department cannot be longer than 100 characters")
     private String department;
 
-    public Employee(Long id, String name, String email, String password, Role role, String department) {
+    public Employee(Long id, String name, String email, String password, Role role,
+                    String department) {
         super(id, name, email, password, role);
         this.department = department;
     }

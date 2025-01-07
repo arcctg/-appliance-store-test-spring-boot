@@ -35,7 +35,6 @@ public class SecurityConfig {
             "/api/auth/**",
             "/api/localization"
     };
-
     private final String[] EMPLOYEE_WHITELIST = {
             "/clients",
             "/appliances", "/api/appliances",

@@ -6,6 +6,7 @@ import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,32 +20,35 @@ public class RestEmployeeController {
 
     @Loggable
     @GetMapping
-    public Page<Employee> getAllEmployees(@PageableDefault(size = 5, sort = "id") Pageable pageable) {
-        return employeeService.getAllEmployees(pageable);
+    public ResponseEntity<Page<Employee>> getAllEmployees(
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(employeeService.getAllEmployees(pageable));
     }
 
     @Loggable
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
-        return employeeService.getEmployeeById(id);
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @Loggable
     @PostMapping
-    public Employee addEmployee(@RequestBody Employee employee) {
-        return employeeService.saveEmployee(employee);
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
 
     @Loggable
     @PutMapping("/{id}")
-    public Employee editEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+    public ResponseEntity<Employee> editEmployee(@PathVariable Long id,
+                                                 @RequestBody Employee employee) {
         employee.setId(id);
-        return employeeService.saveEmployee(employee);
+        return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
 
     @Loggable
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployeeById(id);
+        return ResponseEntity.noContent().build();
     }
 }

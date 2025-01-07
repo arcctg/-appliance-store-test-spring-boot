@@ -15,8 +15,8 @@ public class UserServiceImpl implements UserService {
     private final AdminRepository adminRepository;
 
     public UserServiceImpl(ClientRepository clientRepository,
-                       EmployeeRepository employeeRepository,
-                       AdminRepository adminRepository) {
+                           EmployeeRepository employeeRepository,
+                           AdminRepository adminRepository) {
         this.clientRepository = clientRepository;
         this.employeeRepository = employeeRepository;
         this.adminRepository = adminRepository;

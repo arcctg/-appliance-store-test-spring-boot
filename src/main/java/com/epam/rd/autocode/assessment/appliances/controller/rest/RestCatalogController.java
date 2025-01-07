@@ -6,6 +6,7 @@ import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class RestCatalogController {
 
     @Loggable
     @GetMapping
-    public Page<Appliance> catalog(@PageableDefault(size = 9) Pageable pageable) {
-        return applianceService.getAllAppliances(pageable);
+    public ResponseEntity<Page<Appliance>> catalog(@PageableDefault(size = 9) Pageable pageable) {
+        return ResponseEntity.ok(applianceService.getAllAppliances(pageable));
     }
 }
