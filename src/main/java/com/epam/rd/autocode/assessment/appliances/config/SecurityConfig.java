@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -36,10 +35,9 @@ public class SecurityConfig {
             "/api/localization"
     };
     private final String[] EMPLOYEE_WHITELIST = {
-            "/clients",
-            "/appliances", "/api/appliances",
-            "/manufacturers", "/api/manufacturers",
-            "/clients/toggle"
+            "/clients", "/clients/toggle",
+            "/appliances", "/appliances/**", "/api/appliances", "/api/appliances/**",
+            "/manufacturers", "/manufacturers/**", "/api/manufacturers", "/api/manufacturers/**"
     };
     private static final String[] ADMIN_WHITELIST = {
             "/employees/**", "/api/employees/**",
@@ -75,11 +73,6 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailService() {
-        return myUserDetailService;
     }
 
     @Bean
