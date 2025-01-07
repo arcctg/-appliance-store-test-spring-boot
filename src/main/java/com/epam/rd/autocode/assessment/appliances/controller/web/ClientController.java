@@ -1,8 +1,9 @@
-package com.epam.rd.autocode.assessment.appliances.controller;
+package com.epam.rd.autocode.assessment.appliances.controller.web;
 
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -51,9 +52,16 @@ public class ClientController {
     }
 
     @Loggable
+    @GetMapping("/toggle")
+    public String editClientForm(@RequestParam("id") Long id, HttpServletRequest request) {
+        clientService.toggleClientBlockById(id);
+        return "redirect:" + request.getHeader("Referer");
+    }
+
+    @Loggable
     @GetMapping("/delete")
-    public String deleteClient(@RequestParam("id") Long id) {
+    public String deleteClient(@RequestParam("id") Long id, HttpServletRequest request) {
         clientService.deleteClientById(id);
-        return "redirect:/clients";
+        return "redirect:" + request.getHeader("Referer");
     }
 }

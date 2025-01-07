@@ -1,11 +1,11 @@
-package com.epam.rd.autocode.assessment.appliances.controller;
+package com.epam.rd.autocode.assessment.appliances.controller.web;
 
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class ApplianceController {
     private final ApplianceService applianceService;
 
-    @Autowired
     public ApplianceController(ApplianceService applianceService) {
         this.applianceService = applianceService;
     }
@@ -24,15 +23,9 @@ public class ApplianceController {
     @GetMapping
     public String getAllAppliances(
             Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") String order) {
-        model.addAttribute("appliances", applianceService.getAllAppliances(PageRequest.of(page,
-                size,
-                Sort.by(Sort.Direction.valueOf(order), sort))));
-        model.addAttribute("sort", sort);
-        model.addAttribute("order", order);
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+        model.addAttribute("appliances", applianceService.getAllAppliances(pageable));
+        model.addAttribute("pageable", pageable);
 
         return "appliance/appliances";
     }
@@ -49,9 +42,9 @@ public class ApplianceController {
     }
 
     @Loggable
-    @PostMapping("/add-appliance")
+    @PostMapping({"/add-appliance", "/edit-appliance"})
     public String addAppliance(@ModelAttribute Appliance appliance) {
-        applianceService.addAppliance(appliance);
+        applianceService.saveAppliance(appliance);
         return "redirect:/appliances";
     }
 
@@ -67,17 +60,10 @@ public class ApplianceController {
     }
 
     @Loggable
-    @PostMapping("/edit-appliance")
-    public String editAppliance(@ModelAttribute Appliance appliance) {
-        applianceService.updateAppliance(appliance);
-        return "redirect:/appliances";
-    }
-
-    @Loggable
     @GetMapping("/delete")
-    public String deleteAppliance(@RequestParam("id") Long id) {
+    public String deleteAppliance(@RequestParam("id") Long id, HttpServletRequest request) {
         applianceService.deleteApplianceById(id);
-        return "redirect:/appliances";
+        return "redirect:" + request.getHeader("Referer");
     }
 }
 

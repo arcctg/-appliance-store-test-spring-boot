@@ -1,8 +1,9 @@
 package com.epam.rd.autocode.assessment.appliances.advice;
 
-import com.epam.rd.autocode.assessment.appliances.exception.UserNotFoundException;
+import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,9 +11,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.nio.file.AccessDeniedException;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
-    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+@ControllerAdvice(basePackages = "com.epam.rd.autocode.assessment.appliances.controller.web")
+public class GlobalExceptionHandlerAdvice {
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandlerAdvice.class);
 
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDeniedException() {
@@ -29,9 +30,14 @@ public class GlobalExceptionHandler {
         return "error/500";
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public void handleUserNotFoundException(UserNotFoundException ex) {
+    @ExceptionHandler(ClientNotFoundException.class)
+    public void handleUserNotFoundException(ClientNotFoundException ex) {
         logger.error(ex.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public void handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        logger.info(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

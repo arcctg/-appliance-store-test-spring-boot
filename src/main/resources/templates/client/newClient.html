@@ -2,33 +2,34 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <title>New client</title>
+    <title th:text="#{object.client.new}"></title>
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<div class="container">
-    <h1 th:text="#{client.btn.new}"></h1>
-    <form action="#" method="post" th:action="@{add-client}" th:object="${client}">
+<div class="container mt-5">
+    <h1 th:text="#{object.client.new}"></h1>
+    <form th:action="@{add-client}" th:object="${client}" method="post">
         <div class="mb-3">
             <label for="name" th:text="#{object.user.name}"/>
             <input class="form-control" id="name" required th:field="*{name}" type="text"/>
         </div>
         <div class="mb-3">
-            <label for="email" th:text="#{object.user.email}"></label>
-            <input class="form-control" id="email" required th:field="*{email}" type="text"/>
+            <label for="email" th:text="#{object.user.email}"/>
+            <input class="form-control" id="email" required th:field="*{email}" type="email"/>
         </div>
         <div class="mb-3">
-            <label for="password" th:text="#{object.user.password}"></label>
-            <input class="form-control" id="password" required th:field="*{password}" type="text"/>
+            <label for="password" th:text="#{object.user.password}"/>
+            <input class="form-control" id="password" required th:field="*{password}" type="password"/>
         </div>
         <div class="mb-3">
-            <label for="card" th:text="#{object.client.card}"></label>
-            <input class="form-control" id="card" required th:field="*{card}" type="text"/>
+            <label for="shippingAddress" th:text="#{object.client.shippingAddress}"/>
+            <input class="form-control" id="shippingAddress" required th:field="*{shippingAddress}" type=""/>
+        </div>
+        <div class="mb-3">
+            <label for="enabled" th:text="#{object.client.enabled}"/>
+            <input class="form-check-input" id="enabled" th:field="*{enabled}" type="checkbox" checked/>
         </div>
         <div class="mb-3">
             <input class="btn btn-primary" th:value="#{btn.submit}" type="submit"/>

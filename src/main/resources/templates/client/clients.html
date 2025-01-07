@@ -1,49 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <title>Clients list</title>
+    <title th:text="#{client.header.list}"></title>
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<div class="container" th:with="sort=${pageable.getSort().toString().replace(': ', ',')}, order=${sort.contains('ASC')}">
+<div class="container mt-5" th:with="sort=${pageable.getSort().toString().replace(': ', ',')}, asc=${sort.contains('ASC')},
+ icon=${asc ? 'fa-sort-asc' : 'fa-sort-desc'}, order=${asc ? 'DESC' : 'ASC'}, faSort='fa-sort'">
     <h1 th:text="#{client.header.list}"></h1>
     <table class="table table-bordered">
         <thead>
         <tr class="table-dark">
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='id,'+ ${order ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='id,' + ${order})}"
                    th:text="#{object.user.id}"/>
-                <i class="fa"
-                   th:classappend="${sort.contains('id') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                <i class="fa" th:classappend="${sort.contains('id') ? icon : faSort}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='name,' + ${order ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='name,' + ${order})}"
                    th:text="#{object.user.name}"/>
-                <i class="fa"
-                   th:classappend="${sort.contains('name') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                <i class="fa" th:classappend="${sort.contains('name') ? icon : faSort}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='email,' + ${order ? 'DESC' : 'ASC'})}"
+                   th:href="@{/clients(page=${clients.number}, sort='email,' + ${order})}"
                    th:text="#{object.user.email}"/>
-                <i class="fa"
-                   th:classappend="${sort.contains('email') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                <i class="fa" th:classappend="${sort.contains('email') ? icon : faSort}"></i>
             </th>
             <th>
                 <a class="link-light link-underline-opacity-0"
-                   th:href="@{/clients(page=${clients.number}, sort='card,' + ${order ? 'DESC' : 'ASC'})}"
-                   th:text="#{object.client.card}"></a>
-                <i class="fa"
-                   th:classappend="${sort.contains('card') ? (order ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'}"></i>
+                   th:href="@{/clients(page=${clients.number}, sort='shippingAddress,' + ${order})}"
+                   th:text="#{object.client.shippingAddress}"></a>
+                <i class="fa" th:classappend="${sort.contains('shippingAddress') ? icon : faSort}"></i>
+            </th>
+            <th>
+                <a class="link-light link-underline-opacity-0"
+                   th:href="@{/clients(page=${clients.number}, sort='enabled,' + ${order})}"
+                   th:text="#{object.client.enabled}"></a>
+                <i class="fa" th:classappend="${sort.contains('enabled') ? icon : faSort}"></i>
             </th>
             <th th:text="#{object.operations}"/>
         </tr>
@@ -53,27 +53,31 @@
             <td th:text="${client.id}"/>
             <td th:text="${client.name}"/>
             <td th:text="${client.email}"/>
-            <td th:text="${client.card.replaceAll('\d', '*')}"/>
+            <td th:text="${client.shippingAddress}"/>
+            <td th:text="${client.enabled}"/>
             <td>
-                <a class="btn btn-warning btn-sm" th:href="@{/clients/edit(id=${client.id})}" th:text="#{btn.edit}"/>
-                <a class="btn btn-danger btn-sm"
-                   onclick="return confirm('Are you sure you want to delete this object?');"
-                   th:href="@{/clients/delete(id=${client.id})}" th:text="#{btn.delete}"/>
+                <a class="btn btn-warning btn-sm" th:href="@{/clients/toggle(id=${client.id})}"
+                   th:text="${client.enabled} ? #{btn.lock} : #{btn.unlock}"/>
+                <div class="d-inline" sec:authorize="hasRole('ADMIN')">
+                    <a class="btn btn-warning btn-sm" th:href="@{/clients/edit(id=${client.id})}"
+                       th:text="#{btn.edit}"/>
+                    <a class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this object?');"
+                       th:href="@{/clients/delete(id=${client.id})}" th:text="#{btn.delete}"/>
+                </div>
             </td>
         </tr>
-
         </tbody>
     </table>
-    <a class="btn btn-primary mb-3" th:href="@{clients/add}" th:text="#{client.btn.new}"/>
+    <a class="btn btn-primary mb-3" sec:authorize="hasRole('ADMIN')" th:href="@{clients/add}"
+       th:text="#{object.client.new}"/>
 
     <!-- Pagination Controls -->
     <div class="d-flex justify-content-center">
         <ul class="pagination">
             <li class="page-item" th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
                 <a class="page-link" th:href="@{/clients(page=${clients.number - 1}, sort=${sort})}">
-                    <span class="icon">
-                        <i class="fa fa-chevron-left"></i>
-                    </span>
+                    <i class="fa fa-chevron-left"></i>
                 </a>
             </li>
             <li class="page-item" th:classappend="${i == clients.number} ? 'active' : ''"
@@ -83,9 +87,7 @@
             </li>
             <li class="page-item" th:classappend="${clients.hasNext()} ? '' : 'disabled'">
                 <a class="page-link" th:href="@{/clients(page=${clients.number + 1}, sort=${sort})}">
-                    <span class="icon">
-                        <i class="fa fa-chevron-right"></i>
-                    </span>
+                    <i class="fa fa-chevron-right"></i>
                 </a>
             </li>
         </ul>

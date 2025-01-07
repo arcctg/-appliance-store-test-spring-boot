@@ -10,17 +10,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ApplianceService {
-    void addAppliance(Appliance appliance);
-
-    void updateAppliance(Appliance appliance);
+    Appliance saveAppliance(Appliance appliance);
 
     Appliance getApplianceById(Long id);
 
     void deleteApplianceById(Long id);
 
     Page<Appliance> getAllAppliances(Pageable pageable);
-
-    List<Appliance> getAllAppliances();
 
     Category[] getCategories();
 

@@ -6,17 +6,14 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/" th:text="#{shop.name}"></a>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-3">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/catalog}" th:text="#{catalog.menu.name}"></a>
                     </li>
                 </ul>
-                <ul class="navbar-nav" sec:authorize="hasRole('EMPLOYEE')">
+                <ul class="navbar-nav me-3" sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/clients}" th:text="#{clients.menu.name}"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/employees}" th:text="#{employees.menu.name}"></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/manufacturers}" th:text="#{manufacturers.menu.name}"></a>
@@ -25,8 +22,13 @@
                         <a class="nav-link" th:href="@{/appliances}" th:text="#{appliances.menu.name}"></a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav" sec:authorize="hasRole('ADMIN')">
                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/employees}" th:text="#{employees.menu.name}"></a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-2">
                         <button class="btn btn-outline-light" data-bs-target="#cartModal" data-bs-toggle="modal"
                                 th:text="#{cart.header}" type="button">
                         </button>
@@ -38,14 +40,14 @@
                         <a class="btn btn-outline-light" th:href="@{/logout}" th:text="#{btn.logout}">Logout</a>
                     </li>
                 </ul>
-                <form class="language-form ms-3">
+                <div class="form ms-3">
                     <label>
-                        <select name="lang" onchange="changeLanguage(this.value)">
+                        <select class="form-select" name="lang" onchange="changeLanguage(this.value)">
                             <option th:selected="${#locale.language}=='en'" value="en">English</option>
                             <option th:selected="${#locale.language}=='ua'" value="ua">Українська</option>
                         </select>
                     </label>
-                </form>
+                </div>
                 <script>
                     function changeLanguage(lang) {
                         const url = new URL(window.location.href);
@@ -64,11 +66,14 @@
                                 <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
                                         type="button"></button>
                             </div>
-                            <div class="modal-body">
-                                <div th:if="${cart == null || cart.orderRowSet.isEmpty()}">
-                                    <p th:text="#{cart.empty}">Your cart is empty.</p>
+                            <div sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')" class="text-center mt-3">
+                                <p th:text="#{cart.locked.message}"/>
+                            </div>
+                            <div class="modal-body" th:if="${cart != null}">
+                                <div th:if="${cart.orderRowSet.isEmpty()}">
+                                    <p th:text="#{cart.empty}"/>
                                 </div>
-                                <div th:unless="${cart != null && cart.orderRowSet.isEmpty()}">
+                                <div th:unless="${cart.orderRowSet.isEmpty()}">
                                     <table class="table">
                                         <thead>
                                         <tr>
@@ -89,8 +94,8 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <a class="btn btn-primary" th:href="@{/cart}" th:text="#{cart.full.header}"></a>
+                            <div class="modal-footer justify-content-center">
+                                <a class="btn btn-primary" th:href="@{/cart}" th:text="#{cart.full.btn}"></a>
                                 <button class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{btn.cancel}"
                                         type="button"/>
                             </div>

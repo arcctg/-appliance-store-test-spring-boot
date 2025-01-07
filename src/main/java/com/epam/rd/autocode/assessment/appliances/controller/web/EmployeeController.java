@@ -1,11 +1,11 @@
-package com.epam.rd.autocode.assessment.appliances.controller;
+package com.epam.rd.autocode.assessment.appliances.controller.web;
 
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
@@ -24,14 +23,9 @@ public class EmployeeController {
     @GetMapping
     public String getAllEmployees(
             Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") Integer size,
-            @RequestParam(defaultValue = "id") String sort,
-            @RequestParam(defaultValue = "ASC") String order) {
-        model.addAttribute("employees", employeeService.getAllEmployees(PageRequest.of(page, size,
-                Sort.by(Sort.Direction.valueOf(order), sort))));
-        model.addAttribute("sort", sort);
-        model.addAttribute("order", order);
+            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+        model.addAttribute("employees", employeeService.getAllEmployees(pageable));
+        model.addAttribute("pageable", pageable);
 
         return "employee/employees";
     }
@@ -59,8 +53,8 @@ public class EmployeeController {
 
     @Loggable
     @GetMapping("/delete")
-    public String deleteEmployee(@RequestParam("id") Long id) {
+    public String deleteEmployee(@RequestParam("id") Long id, HttpServletRequest request) {
         employeeService.deleteEmployeeById(id);
-        return "redirect:/employees";
+        return "redirect:" + request.getHeader("Referer");
     }
 }

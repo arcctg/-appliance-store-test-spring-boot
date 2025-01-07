@@ -49,7 +49,7 @@ public class TestConstants {
     }
 
     static class User {
-        public static final String CLASS_NAME = "User";
+        public static final String CLASS_NAME = "CustomUser";
         public static final int CLASS_COUNT_FIELDS = 4;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;

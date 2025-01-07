@@ -1,48 +1,31 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
-import com.epam.rd.autocode.assessment.appliances.model.Client;
-import com.epam.rd.autocode.assessment.appliances.model.Employee;
-import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
-import com.epam.rd.autocode.assessment.appliances.repository.EmployeeRepository;
+import com.epam.rd.autocode.assessment.appliances.model.*;
+import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class MyUserDetailService implements UserDetailsService {
-    private final ClientRepository clientRepository;
-    private final EmployeeRepository employeeRepository;
+    private final UserService userService;
 
-    public MyUserDetailService(ClientRepository clientRepository, EmployeeRepository employeeRepository) {
-        this.clientRepository = clientRepository;
-        this.employeeRepository = employeeRepository;
+    public MyUserDetailService(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Client> myClientOptional = clientRepository.findByEmail(email);
-        Optional<Employee> myEmployeeOptional = employeeRepository.findByEmail(email);
-        if (myClientOptional.isPresent()) {
-            Client client = myClientOptional.get();
-            return User.builder()
-                    .username(client.getEmail())
-                    .password(client.getPassword())
-                    .roles("USER")
-                    .build();
-        } else if (myEmployeeOptional.isPresent()) {
-            Employee employee = myEmployeeOptional.get();
-            return User.builder()
-                    .username(employee.getEmail())
-                    .password(employee.getPassword())
-                    .roles("EMPLOYEE")
-                    .build();
+        CustomUser user = userService.findUserByEmail(email);
+        boolean locked = user instanceof Client && !((Client) user).getEnabled();
 
-        } else {
-            throw new UsernameNotFoundException(email);
-        }
+        return User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .accountLocked(locked)
+                .roles(user.getRole().name())
+                .build();
     }
 }

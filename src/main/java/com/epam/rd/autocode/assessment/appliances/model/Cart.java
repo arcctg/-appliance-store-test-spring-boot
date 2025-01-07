@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -15,10 +15,8 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Employee employee;
-    @ManyToOne
+    @OneToOne
     private Client client;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<OrderRow> orderRowSet;
+    @OneToMany
+    private Set<OrderRow> orderRowSet = new LinkedHashSet<>();
 }

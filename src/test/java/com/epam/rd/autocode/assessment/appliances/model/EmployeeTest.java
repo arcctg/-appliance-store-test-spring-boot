@@ -31,7 +31,7 @@ class EmployeeTest {
     }
 
     @Test
-    @DisplayName("Test superclass is User")
+    @DisplayName("Test superclass is CustomUser")
     void checkSuperclassIsUser() {
         final Class<?> superclass = clazz.getSuperclass();
         final String actual = superclass.getTypeName();

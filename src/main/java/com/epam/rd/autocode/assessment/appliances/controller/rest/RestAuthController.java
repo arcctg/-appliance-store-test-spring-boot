@@ -1,0 +1,55 @@
+package com.epam.rd.autocode.assessment.appliances.controller.rest;
+
+import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
+import com.epam.rd.autocode.assessment.appliances.model.AuthenticationRequest;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+public class RestAuthController {
+
+    @PostMapping("/login")
+    public String login(@Valid @RequestBody AuthenticationRequest form, HttpServletRequest request) {
+        try {
+            request.login(form.getUsername(), form.getPassword());
+        } catch (ServletException e) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        return "Login successful!";
+    }
+
+    @Loggable
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) throws ServletException {
+        if (request.getUserPrincipal() == null) {
+            throw new RuntimeException("No user is currently logged in!");
+        } else {
+            request.logout();
+        }
+
+        return "Logout successful!";
+    }
+
+    @Loggable
+    @GetMapping("/status")
+    public ResponseEntity<Map<String, Object>> status(@AuthenticationPrincipal User user) {
+        if (user != null) {
+            return ResponseEntity.ok(Map.of(
+                    "authenticated", true,
+                    "user", user.getUsername(),
+                    "roles", user.getAuthorities().toString()
+            ));
+        }
+        return ResponseEntity.ok(Map.of("authenticated", false));
+    }
+}

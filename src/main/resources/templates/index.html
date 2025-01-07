@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <!-- Latest compiled and minified CSS -->
@@ -14,7 +14,14 @@
     <div th:insert="~{menunavy::navy}"></div>
 </header>
 <main>
-    <h1>Main content</h1>
+    <div class="container d-flex justify-content-center align-items-center vh-100 pb-5">
+        <div class="pb-5">
+            <h1 sec:authorize="isAnonymous()" th:text="#{welcome.anonymous}"></h1>
+            <h1 sec:authorize="hasRole('CLIENT')" th:text="#{welcome.client}"></h1>
+            <h1 sec:authorize="hasRole('EMPLOYEE')" th:text="#{welcome.employee}"></h1>
+            <h1 sec:authorize="hasRole('ADMIN')" th:text="#{welcome.admin}"></h1>
+        </div>
+    </div>
 </main>
 <div th:insert="~{footer::footer}"></div>
 </body>
