@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,8 +17,16 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToOne
     private Client client;
-    @OneToMany
-    private Set<OrderRow> orderRowSet = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    private List<OrderRow> orderRowList = new ArrayList<>();
+
+    public BigDecimal getTotal() {
+        return orderRowList.stream()
+                .map(OrderRow::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

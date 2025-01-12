@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title th:text="#{orders.header.list}"></title>
+</head>
+<body>
+<div th:insert="~{menunavy::navy}"></div>
+<div class="container mt-5" th:with="sort=${pageable.getSort().toString().replace(': ', ',')}, asc=${sort.contains('ASC')},
+ icon=${asc ? 'fa-sort-asc' : 'fa-sort-desc'}, dir=${asc ? 'DESC' : 'ASC'}, faSort='fa-sort'">
+    <h1 th:text="#{orders.header.list}"></h1>
+    <div th:if="${orders.isEmpty()}">
+        <p th:text="#{orders.empty}"/>
+    </div>
+    <div th:unless="${orders.isEmpty()}">
+        <table class="table table-bordered">
+            <thead>
+            <tr class="table-dark">
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/orders(page=${orders.number}, sort='id,' + ${dir})}"
+                       th:text="#{object.order.id}"/>
+                    <i class="fa" th:classappend="${sort.contains('id') ? icon : faSort}"></i>
+                </th>
+                <th sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')">
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/orders(page=${orders.number}, sort='client,' + ${dir})}"
+                       th:text="#{object.order.client}"/>
+                    <i class="fa" th:classappend="${sort.contains('client') ? icon : faSort}"></i>
+                </th>
+                <th sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')">
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/orders(page=${orders.number}, sort='employee,' + ${dir})}"
+                       th:text="#{object.order.employee}"/>
+                    <i class="fa" th:classappend="${sort.contains('employee') ? icon : faSort}"></i>
+                </th>
+                <th th:text="#{appliances.menu.name}"/>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/orders(page=${orders.number}, sort='total,' + ${dir})}"
+                       th:text="#{object.order.total}"/>
+                    <i class="fa" th:classappend="${sort.contains('total') ? icon : faSort}"></i>
+                </th>
+                <th>
+                    <a class="link-light link-underline-opacity-0"
+                       th:href="@{/orders(page=${orders.number}, sort='status,' + ${dir})}"
+                       th:text="#{object.order.status}"/>
+                    <i class="fa" th:classappend="${sort.contains('status') ? icon : faSort}"></i>
+                </th>
+                <th th:text="#{object.operations}"/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order: ${orders}">
+                <td th:text="${order.id}"/>
+                <td sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')"
+                    th:text="${order.client.name}"/>
+                <td sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')"
+                    th:text="${order.employee != null} ? ${order.employee.name} : ''"/>
+                <td th:text="${order.getAppliancesModels()}"/>
+                <td th:text="${order.total}"/>
+                <td th:text="${order.status}"/>
+                <td>
+                    <form sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')" th:action="@{/orders/update-status}" method="post" class="d-inline">
+                        <input type="hidden" th:name="id" th:value="${order.id}"/>
+                        <select class="form-select" required th:name="status">
+                            <option th:each="status : ${T(com.epam.rd.autocode.assessment.appliances.model.enums.Status).values()}"
+                                    th:text="${status}" th:value="${status}"/>
+                        </select>
+                        <button class="btn btn-warning btn-sm" type="submit" th:text="#{btn.update.status}"/>
+                    </form>
+                    <a class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to cancel this order?');"
+                       th:href="@{/orders/cancel(id=${order.id})}" th:text="#{btn.cancel}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <!-- Pagination Controls -->
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${orders.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{/orders(page=${orders.number - 1}, sort=${sort})}">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i == orders.number} ? 'active' : ''"
+                    th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}">
+                    <a class="page-link" th:href="@{/orders(page=${i}, sort=${sort})}"
+                       th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${orders.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link" th:href="@{/orders(page=${orders.number + 1}, sort=${sort})}">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div th:insert="~{footer::footer}"></div>
+</body>
+</html>

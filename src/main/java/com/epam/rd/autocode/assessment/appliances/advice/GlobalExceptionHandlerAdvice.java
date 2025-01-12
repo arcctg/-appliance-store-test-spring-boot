@@ -44,6 +44,9 @@ public class GlobalExceptionHandlerAdvice {
     public String handleGlobalException(Exception ex, Model model) {
         model.addAttribute("message", "An unexpected error occurred: " + ex.getMessage());
 
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
+
         return "error/generalError";
     }
 }

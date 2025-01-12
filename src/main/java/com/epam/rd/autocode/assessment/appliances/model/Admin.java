@@ -1,5 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
+import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

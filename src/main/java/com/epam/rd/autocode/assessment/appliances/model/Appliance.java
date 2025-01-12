@@ -1,5 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
+import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
+import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;

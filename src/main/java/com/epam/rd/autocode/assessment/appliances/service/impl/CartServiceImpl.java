@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -58,15 +58,19 @@ public class CartServiceImpl implements CartService {
     }
 
     private void mergeCarts(Cart userCart, Cart anonymousCart) {
-        Set<OrderRow> userOrderRowSet = userCart.getOrderRowSet();
-        for (OrderRow orderRow : anonymousCart.getOrderRowSet()) {
+        List<OrderRow> userOrderRowSet = userCart.getOrderRowList();
+        for (OrderRow orderRow : anonymousCart.getOrderRowList()) {
             userOrderRowSet.stream()
                     .filter(o -> o.getAppliance().getId().equals(orderRow.getAppliance().getId()))
                     .findFirst()
                     .ifPresentOrElse(existingOrderRow -> {
                         existingOrderRow.setNumber(existingOrderRow.getNumber() + orderRow.getNumber());
                         existingOrderRow.setAmount(existingOrderRow.getAmount().add(orderRow.getAmount()));
-                    }, () -> userOrderRowSet.add(orderRow));
+                        existingOrderRow.setCart(userCart);
+                    }, () -> {
+                        orderRow.setCart(userCart);
+                        userOrderRowSet.add(orderRow);
+                    });
         }
     }
 
@@ -75,7 +79,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCurrentUserCart();
         Appliance appliance = applianceService.getApplianceById(applianceId);
 
-        cart.getOrderRowSet().stream()
+        cart.getOrderRowList().stream()
                 .filter(orderRow -> orderRow.getAppliance().getId().equals(applianceId))
                 .findFirst()
                 .ifPresentOrElse(orderRow -> {
@@ -83,10 +87,11 @@ public class CartServiceImpl implements CartService {
                     orderRow.setAmount(BigDecimal.valueOf(orderRow.getNumber()).multiply(appliance.getPrice()));
                 }, () -> {
                     OrderRow orderRow = new OrderRow();
+                    orderRow.setCart(cart);
                     orderRow.setAppliance(appliance);
                     orderRow.setNumber(number);
                     orderRow.setAmount(BigDecimal.valueOf(number).multiply(appliance.getPrice()));
-                    cart.getOrderRowSet().add(orderRowRepository.save(orderRow));
+                    cart.getOrderRowList().add(orderRowRepository.save(orderRow));
                 });
 
         cartRepository.save(cart);
@@ -94,7 +99,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void editItemInCart(Long orderId, Long number) {
-        getCurrentUserCart().getOrderRowSet().stream()
+        getCurrentUserCart().getOrderRowList().stream()
                 .filter(orderRow -> orderRow.getId().equals(orderId))
                 .findFirst()
                 .ifPresent(orderRow -> {
@@ -107,7 +112,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteItemFromCart(Long orderId) {
         Cart cart = getCurrentUserCart();
-        cart.getOrderRowSet().removeIf(orderRow -> orderRow.getId().equals(orderId));
+        cart.getOrderRowList().removeIf(orderRow -> orderRow.getId().equals(orderId));
         cartRepository.save(cart);
+    }
+
+    @Override
+    public void deleteCart(Cart cart) {
+        cartRepository.delete(cart);
     }
 }

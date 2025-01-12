@@ -1,9 +1,9 @@
 package com.epam.rd.autocode.assessment.appliances.service;
 
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
-import com.epam.rd.autocode.assessment.appliances.model.Category;
+import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
-import com.epam.rd.autocode.assessment.appliances.model.PowerType;
+import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

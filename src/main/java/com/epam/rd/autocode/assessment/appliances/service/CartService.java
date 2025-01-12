@@ -10,4 +10,6 @@ public interface CartService {
     void editItemInCart(Long orderId, Long number);
 
     void deleteItemFromCart(Long orderId);
+
+    void deleteCart(Cart cart);
 }

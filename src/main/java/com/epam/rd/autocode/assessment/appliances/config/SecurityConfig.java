@@ -1,6 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.config;
 
-import com.epam.rd.autocode.assessment.appliances.model.Role;
+import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import com.epam.rd.autocode.assessment.appliances.service.impl.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,22 +19,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final MyUserDetailService myUserDetailService;
-    private final String ADMIN = Role.ADMIN.name();
-    private final String EMPLOYEE = Role.EMPLOYEE.name();
-    private final String[] SWAGGER_WHITELIST = {
+    private static final String ADMIN = Role.ADMIN.name();
+    private static final String EMPLOYEE = Role.EMPLOYEE.name();
+    private static final String[] SWAGGER_WHITELIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/swagger-resources"
     };
-    private final String[] PUBLIC_WHITELIST = {
+    private static final String[] PUBLIC_WHITELIST = {
             "/", "/api", "/api/index",
             "/catalog", "/api/catalog",
             "/cart/**", "/api/cart/**", "/api/cart",
             "/api/auth/**",
             "/api/localization"
     };
-    private final String[] EMPLOYEE_WHITELIST = {
+    private static final String[] EMPLOYEE_WHITELIST = {
             "/clients", "/clients/toggle",
             "/appliances", "/appliances/**", "/api/appliances", "/api/appliances/**",
             "/manufacturers", "/manufacturers/**", "/api/manufacturers", "/api/manufacturers/**"

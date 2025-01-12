@@ -10,6 +10,9 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/catalog}" th:text="#{catalog.menu.name}"></a>
                     </li>
+                    <li sec:authorize="!isAnonymous()" class="nav-item">
+                        <a class="nav-link" th:href="@{/orders}" th:text="#{orders.menu.name}"></a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav me-3" sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">
                     <li class="nav-item">
@@ -70,10 +73,10 @@
                                 <p th:text="#{cart.locked.message}"/>
                             </div>
                             <div class="modal-body" th:if="${cart != null}">
-                                <div th:if="${cart.orderRowSet.isEmpty()}">
+                                <div th:if="${cart.orderRowList.isEmpty()}">
                                     <p th:text="#{cart.empty}"/>
                                 </div>
-                                <div th:unless="${cart.orderRowSet.isEmpty()}">
+                                <div th:unless="${cart.orderRowList.isEmpty()}">
                                     <table class="table">
                                         <thead>
                                         <tr>
@@ -84,7 +87,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="orderRow : ${cart.orderRowSet}">
+                                        <tr th:each="orderRow : ${cart.orderRowList}">
                                             <td th:text="${orderRow.appliance.name}"></td>
                                             <td th:text="${orderRow.appliance.price} + '$'"></td>
                                             <td th:text="${orderRow.number}"></td>

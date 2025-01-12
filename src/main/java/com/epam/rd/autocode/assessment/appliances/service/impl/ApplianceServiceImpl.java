@@ -2,9 +2,9 @@ package com.epam.rd.autocode.assessment.appliances.service.impl;
 
 import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
-import com.epam.rd.autocode.assessment.appliances.model.Category;
+import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
-import com.epam.rd.autocode.assessment.appliances.model.PowerType;
+import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.ManufacturerRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;

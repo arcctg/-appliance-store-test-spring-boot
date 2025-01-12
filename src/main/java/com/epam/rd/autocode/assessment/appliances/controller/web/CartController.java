@@ -4,7 +4,6 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,8 @@ public class CartController {
     }
 
     @Loggable
-    @GetMapping()
-    public String viewCart(Model model) {
+    @GetMapping
+    public String viewCart() {
         return "cart/cart";
     }
 
@@ -31,6 +30,7 @@ public class CartController {
                                 @RequestParam Long applianceId,
                                 @RequestParam Long number) {
         cartService.addItemToCart(applianceId, number);
+
         return "redirect:" + request.getHeader("Referer");
     }
 
