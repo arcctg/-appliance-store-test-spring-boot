@@ -55,48 +55,66 @@ class OrderRowTest {
     }
 
     @Test
-    @DisplayName("OrderRow has to constructor with 2 parameter")
+    @DisplayName("OrderRow has constructor with 6 parameters")
     void checkConstructorWithParameter() {
         long count = allConstructors.stream()
-                .filter(c -> c.getParameterCount() == PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS)
+                .filter(c -> c.getParameterCount() == 6) // Expect 6 parameters
                 .count();
         assertEquals(1, count);
     }
 
     @Test
-    @DisplayName("Check parameter type in constructor with parameter")
+    @DisplayName("Check parameter type in constructor with 6 parameters")
     void checkParameterTypeForConstructorWithParameter() {
         final Constructor<?> constructor = allConstructors.stream()
-                .filter(c -> c.getParameterCount() == PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS)
+                .filter(c -> c.getParameterCount() == 6) // Update to 6 parameters
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No constructor with " + PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS + " parameters"));
+                .orElseThrow(() -> new RuntimeException("No constructor with 6 parameters"));
 
         final List<Parameter> parameters = Arrays.asList(constructor.getParameters());
 
-
-        final long countLong = parameters.stream()
+        // Check the first parameter type (Long id)
+        parameters.stream()
                 .filter(p -> p.getType().getTypeName().equals(LONG_TYPE))
-                .count();
-
-
-        parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(APPLIANCE_TYPE))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No parameter with type " + APPLIANCE_TYPE));
+                .orElseThrow(() -> new RuntimeException("No parameter with type " + LONG_TYPE));
 
+        // Check the second parameter type (Cart cart)
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(BIG_DECIMAL_TYPE))
+                .filter(p -> p.getType().getTypeName().equals("com.epam.rd.autocode.assessment.appliances.model.Cart"))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No parameter with type " + BIG_DECIMAL_TYPE));
+                .orElseThrow(() -> new RuntimeException("No parameter with type Cart"));
 
-        assertEquals(countLong, 2);
+        // Check the third parameter type (Order order)
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals("com.epam.rd.autocode.assessment.appliances.model.Order"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with type Order"));
+
+        // Check the fourth parameter type (Appliance appliance)
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals("com.epam.rd.autocode.assessment.appliances.model.Appliance"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with type Appliance"));
+
+        // Check the fifth parameter type (Long number)
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals(LONG_TYPE))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with type " + LONG_TYPE));
+
+        // Check the sixth parameter type (BigDecimal amount)
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals("java.math.BigDecimal"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with type BigDecimal"));
     }
 
-    /*Tests for fields*/
     @Test
     void checkCountFields() {
-        assertEquals(CLASS_COUNT_FIELDS, allFields.size());
+        assertEquals(6, allFields.size());  // Expect 6 fields in the OrderRow class
     }
+
 
     @Test
     void checkAllFieldsArePrivate() {
@@ -104,28 +122,27 @@ class OrderRowTest {
                 .filter(p -> Modifier.isPrivate(p.getModifiers()))
                 .count();
 
-        assertEquals(CLASS_COUNT_FIELDS, count);
+        assertEquals(6, count);  // Expect 6 private fields
     }
+
+
     @ParameterizedTest
-    @CsvSource({"id",
-            "appliance",
-            "amount",
-            "number"
-    })
-    void checkFieldsNames(String name){
+    @CsvSource({"id", "cart", "order", "appliance", "number", "amount"})
+    @DisplayName("Check all fields are present")
+    void checkFieldNames(String name) {
         final long count = allFields.stream()
                 .filter(f -> f.getName().equals(name))
                 .count();
-        assertEquals(count,1);
+        assertEquals(1, count);
     }
-    /*not for student*/
+
     @ParameterizedTest
     @CsvFileSource(resources = "/OrderRowField.csv")
-    void checkNameFieldType(String fieldType, String fieldName) {
-        final long countLong = allFields.stream()
+    void checkFieldTypes(String fieldType, String fieldName) {
+        final long count = allFields.stream()
                 .filter(f -> f.getType().getTypeName().equals(fieldType)
-                        & f.getName().equals(fieldName))
+                        && f.getName().equals(fieldName))
                 .count();
-        assertEquals(1, countLong);
+        assertEquals(1, count);
     }
 }

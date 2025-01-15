@@ -1,5 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
+import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
+import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -62,45 +64,48 @@ class ApplianceTest {
     @Test
     @DisplayName("Check parameter type in constructor with parameter")
     void checkParameterTypeForConstructorWithParameter() {
+        // Find the constructor with parameters
         final Constructor<?> constructor = allConstructors.stream()
                 .filter(c -> c.getParameterCount() == TestConstants.Appliance.PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No constructor with two parameters"));
 
+        // Get all constructor parameters
         final List<Parameter> parameters = Arrays.asList(constructor.getParameters());
 
-
+        // Check for each type manually to make sure everything is reflected correctly
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.LONG_TYPE))
+                .filter(p -> p.getType().equals(Long.class))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + TestConstants.LONG_TYPE));
 
-        final long countString = parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.STRING_TYPE))
-                .count();
+        parameters.stream()
+                .filter(p -> p.getType().equals(String.class))
+                .count(); // Ensure string parameters
 
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.CATEGORY_TYPE))
+                .filter(p -> p.getType().equals(Category.class))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + TestConstants.CLASS_PACKAGE + "." + TestConstants.Category.ENUM_NAME));
 
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.MANUFACTURER_TYPE))
+                .filter(p -> p.getType().equals(Manufacturer.class))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + TestConstants.CLASS_PACKAGE + "." + TestConstants.Manufacturer.CLASS_NAME));
 
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.POWER_TYPE_TYPE))
+                .filter(p -> p.getType().equals(PowerType.class))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + TestConstants.CLASS_PACKAGE + "." + TestConstants.PowerType.ENUM_NAME));
 
         parameters.stream()
-                .filter(p -> p.getType().getTypeName().equals(TestConstants.INT_TYPE))
+                .filter(p -> p.getType().equals(Integer.class))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + TestConstants.INT_TYPE));
 
-        assertEquals(4, countString);
+        assertEquals(4, parameters.stream().filter(p -> p.getType().equals(String.class)).count());
     }
+
 
     /* Tests for FIELDS */
     @Test
@@ -128,7 +133,8 @@ class ApplianceTest {
             "powerType,1",
             "characteristic,1",
             "description,1",
-            "power,1"
+            "power,1",
+            "price,1"
     })
     @DisplayName("To " + TestConstants.Appliance.CLASS_NAME + " check fields name")
     void checkFieldNameName(String name, long expected) {

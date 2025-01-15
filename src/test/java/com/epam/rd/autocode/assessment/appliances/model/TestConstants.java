@@ -2,8 +2,8 @@ package com.epam.rd.autocode.assessment.appliances.model;
 
 public class TestConstants {
     public static final String CLASS_PACKAGE = "com.epam.rd.autocode.assessment.appliances.model";
-    public static final String CATEGORY_TYPE = CLASS_PACKAGE + "." + Category.ENUM_NAME;
-    public static final String POWER_TYPE_TYPE = CLASS_PACKAGE + "." + PowerType.ENUM_NAME;
+    public static final String CATEGORY_TYPE = CLASS_PACKAGE + ".enums." + Category.ENUM_NAME;
+    public static final String POWER_TYPE_TYPE = CLASS_PACKAGE + ".enums." + PowerType.ENUM_NAME;
     public static final String MANUFACTURER_TYPE = CLASS_PACKAGE + "." + Manufacturer.CLASS_NAME;
     public static final String APPLIANCE_TYPE = CLASS_PACKAGE + "." + Appliance.CLASS_NAME;
     public static final String USER_TYPE = CLASS_PACKAGE + "." + User.CLASS_NAME;
@@ -50,7 +50,7 @@ public class TestConstants {
 
     static class User {
         public static final String CLASS_NAME = "CustomUser";
-        public static final int CLASS_COUNT_FIELDS = 4;
+        public static final int CLASS_COUNT_FIELDS = 5;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;
     }

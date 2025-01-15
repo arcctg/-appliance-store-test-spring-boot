@@ -20,7 +20,12 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         CustomUser user = userService.findUserByEmail(email);
-        boolean locked = user instanceof Client && !((Client) user).getEnabled();
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+
+        boolean locked = user instanceof Client client && !client.getEnabled();
 
         return User.builder()
                 .username(user.getEmail())

@@ -1,5 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
+import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class EmployeeTest {
     }
 
     @Test
-    @DisplayName(CLASS_NAME + " has to default constructor")
+    @DisplayName(EMPLOYEE_TYPE + " has a default constructor")
     void checkDefaultConstructor() {
         long count = allConstructors.stream()
                 .filter(c -> c.getParameterCount() == 0)
@@ -63,35 +64,50 @@ class EmployeeTest {
     }
 
     @Test
-    @DisplayName(EMPLOYEE_TYPE + " has to constructor with " + PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS + " parameters")
+    @DisplayName(EMPLOYEE_TYPE + " has constructor with 6 parameters")
     void checkConstructorWithParameter() {
         long count = allConstructors.stream()
-                .filter(c -> c.getParameterCount() == PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS)
+                .filter(c -> c.getParameterCount() == 6) // Expecting 6 parameters
                 .count();
         assertEquals(1, count);
     }
 
+
     @Test
-    @DisplayName("Check parameter type in constructor with parameter")
+    @DisplayName("Check parameter types in constructor with 6 parameters")
     void checkParameterTypeForConstructorWithParameter() {
         final Constructor<?> constructor = allConstructors.stream()
-                .filter(c -> c.getParameterCount() == PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS)
+                .filter(c -> c.getParameterCount() == 6) // Expecting 6 parameters
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No constructor with " + PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS + " parameters"));
+                .orElseThrow(() -> new RuntimeException("No constructor with 6 parameters"));
 
         final List<Parameter> parameters = Arrays.asList(constructor.getParameters());
 
-
+        // Check for parameter of type Long (id)
         parameters.stream()
                 .filter(p -> p.getType().getTypeName().equals(LONG_TYPE))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No parameter with type " + LONG_TYPE));
 
+        // Check for parameter of type String (name, email, password, department)
         final long countStringParameters = parameters.stream()
                 .filter(p -> p.getType().getTypeName().equals(STRING_TYPE))
                 .count();
         assertEquals(4, countStringParameters);
+
+        // Check for parameter of type Role (role)
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals(Role.class.getTypeName()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with type " + Role.class.getTypeName()));
+
+        // Check for department parameter
+        parameters.stream()
+                .filter(p -> p.getType().getTypeName().equals(STRING_TYPE) && p.getName().equals("department"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No parameter with name 'department'"));
     }
+
 
     /* Tests for FIELDS */
     @Test
@@ -110,24 +126,21 @@ class EmployeeTest {
     }
 
     @Test
-    @DisplayName("To " + CLASS_NAME + " check fields name")
-    void checkFieldNameName() {
+    @DisplayName("To " + EMPLOYEE_TYPE + " check fields name")
+    void checkFieldNameDepartment() {
         final long count = allFields.stream()
-                .filter(f -> f.getName().equals(FIELD_DEPARTMENT))
+                .filter(f -> f.getName().equals("department"))
                 .count();
         assertEquals(1, count);
     }
 
-    /*not for student*/
     @Test
     @DisplayName("Check field type and field name")
-    void checkNameFieldType() {
-        final long countLong = allFields.stream()
+    void checkFieldTypeAndName() {
+        final long count = allFields.stream()
                 .filter(f -> f.getType().getTypeName().equals(STRING_TYPE)
-                        & f.getName().equals(FIELD_DEPARTMENT))
+                        && f.getName().equals("department"))
                 .count();
-        assertEquals(1, countLong);
+        assertEquals(1, count);
     }
-
-
 }

@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
                 }).orElse(null);
     }
 
-    private void mergeCarts(Cart userCart, Cart anonymousCart) {
+    public void mergeCarts(Cart userCart, Cart anonymousCart) {
         List<OrderRow> userOrderRowSet = userCart.getOrderRowList();
         for (OrderRow orderRow : anonymousCart.getOrderRowList()) {
             userOrderRowSet.stream()
@@ -99,21 +99,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void editItemInCart(Long orderId, Long number) {
-        getCurrentUserCart().getOrderRowList().stream()
+        Cart cart = getCurrentUserCart();
+
+        cart.getOrderRowList().stream()
                 .filter(orderRow -> orderRow.getId().equals(orderId))
                 .findFirst()
                 .ifPresent(orderRow -> {
                     orderRow.setNumber(number);
                     orderRow.setAmount(BigDecimal.valueOf(number).multiply(orderRow.getAppliance().getPrice()));
-                    cartRepository.save(getCurrentUserCart());
+                    cartRepository.save(cart);
                 });
     }
 
     @Override
     public void deleteItemFromCart(Long orderId) {
-        Cart cart = getCurrentUserCart();
-        cart.getOrderRowList().removeIf(orderRow -> orderRow.getId().equals(orderId));
-        cartRepository.save(cart);
+        orderRowRepository.deleteById(orderId);
     }
 
     @Override
