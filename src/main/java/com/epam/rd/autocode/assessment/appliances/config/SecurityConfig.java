@@ -63,9 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(ADMIN_WHITELIST).hasRole(ADMIN)
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .permitAll()
-                )
+                .formLogin(form -> form.permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
