@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.config;
 
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
+import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import com.epam.rd.autocode.assessment.appliances.service.impl.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -35,7 +37,8 @@ public class SecurityConfig {
             "/cart/**", "/api/cart/**", "/api/cart",
             "/register", "/new-user",
             "/api/auth/**",
-            "/api/localization"
+            "/api/localization",
+            "/actuator", "/actuator/**"
     };
     private static final String[] EMPLOYEE_WHITELIST = {
             "/clients", "/clients/toggle",
