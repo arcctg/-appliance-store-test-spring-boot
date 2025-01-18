@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,13 +44,23 @@ public class GlobalExceptionHandlerAdvice {
     }
 
     @ExceptionHandler({UsernameNotFoundException.class, NotFoundException.class})
-    public void handleUserNotFoundException(RuntimeException ex) {
+    public void handleNotFoundException(RuntimeException ex) {
         logger.error(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String handleNotValidException(MethodArgumentNotValidException ex, Model model) {
+        String message = getErrorMessage(ex);
+
+        model.addAttribute("message", message);
+        logger.warn(message);
+
+        return "error/notValidError";
     }
 
     @ExceptionHandler(Exception.class)
     public String handleGlobalException(Exception ex, Model model) {
-        String message = "An unexpected error occurred: " + getErrorMessage(ex);
+        String message = "An unexpected error occurred: " + ex.getMessage();
 
         model.addAttribute("message", message);
         logger.error(message);
@@ -58,15 +69,11 @@ public class GlobalExceptionHandlerAdvice {
         return "error/generalError";
     }
 
-    private String getErrorMessage(Throwable throwable) {
-        if (throwable instanceof MethodArgumentNotValidException ex) {
-            return ex.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(error -> ((FieldError) error).getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        }
-
-        return throwable.getMessage();
+    private String getErrorMessage(MethodArgumentNotValidException ex) {
+        return ex.getBindingResult()
+            .getAllErrors()
+            .stream()
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .collect(Collectors.joining(", "));
     }
 }

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<main>
+  <div class="container text-center">
+    <h1 class="mt-5" th:text="#{error.valid.header}"/>
+    <div class="alert alert-danger" role="alert" th:text="${message}"></div>
+    <a onclick="history.go(-1)" class="btn btn-primary" th:text="#{error.return}"></a>
+  </div>
+</main>
+<div th:insert="~{footer::footer}"></div>
+</body>
+</html>
