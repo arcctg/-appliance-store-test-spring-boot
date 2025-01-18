@@ -1,18 +1,20 @@
 package com.epam.rd.autocode.assessment.appliances.advice;
 
+import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import com.epam.rd.autocode.assessment.appliances.exception.NotFoundException;
+import com.epam.rd.autocode.assessment.appliances.exception.UserAlreadyExistsException;
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.nio.file.AccessDeniedException;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice(basePackages = "com.epam.rd.autocode.assessment.appliances.controller.rest")
 public class RestGlobalExceptionHandlerAdvice {
@@ -31,20 +33,20 @@ public class RestGlobalExceptionHandlerAdvice {
         return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(ClientNotFoundException ex) {
+    @ExceptionHandler({UsernameNotFoundException.class, NotFoundException.class})
+    public ResponseEntity<String> handleUserNotFoundException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(TransactionSystemException.class)
-    public ResponseEntity<String> handleTransactionSystemException(TransactionSystemException ex) {
-        return new ResponseEntity<>(getErrorMessage(ex.getMostSpecificCause()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex) {
+        return new ResponseEntity<>(getErrorMessage(ex), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
@@ -53,12 +55,13 @@ public class RestGlobalExceptionHandlerAdvice {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private String getErrorMessage(Throwable throwable) {
-        if (throwable instanceof ConstraintViolationException exception) {
-            return exception.getConstraintViolations().stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", "));
-        }
-        return throwable.getMessage();
+    private Map<String, String> getErrorMessage(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult()
+                .getAllErrors()
+                .forEach(error -> errors.put(((FieldError) error).getField(), error.getDefaultMessage()));
+
+        return errors;
     }
 }
