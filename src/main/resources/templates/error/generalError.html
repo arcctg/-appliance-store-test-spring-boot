@@ -10,7 +10,7 @@
     <div class="container text-center">
         <h1 class="mt-5" th:text="#{error.header}"/>
         <div class="alert alert-danger" role="alert" th:text="${message != null ? message : 'Error occurred'}"></div>
-        <a onclick="history.go(-1)" class="btn btn-primary">Return to Previous Page</a>
+        <a onclick="history.go(-1)" class="btn btn-primary" th:text="#{error.return}"></a>
     </div>
 </main>
 <div th:insert="~{footer::footer}"></div>

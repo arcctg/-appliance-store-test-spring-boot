@@ -21,9 +21,7 @@ public class ApplianceController {
 
     @Loggable
     @GetMapping
-    public String getAllAppliances(
-            Model model,
-            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+    public String getAllAppliances(Model model, @PageableDefault(size = 5, sort = "id") Pageable pageable) {
         model.addAttribute("appliances", applianceService.getAllAppliances(pageable));
         model.addAttribute("pageable", pageable);
 

@@ -43,8 +43,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder() {
-        Order order = new Order();
         Cart cart = cartService.getCurrentUserCart();
+        if (cart == null) return null;
+
+        Order order = new Order();
         List<OrderRow> orderRowList = cart.getOrderRowList();
 
         order.setClient(cart.getClient());

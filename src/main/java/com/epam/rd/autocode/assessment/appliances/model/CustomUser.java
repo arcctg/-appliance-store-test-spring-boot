@@ -27,7 +27,7 @@ public class CustomUser {
     private String email;
 
     @NotEmpty(message = "Please provide your password")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Size(min = 3, message = "Password must be at least 3 characters long")
     private String password;
 
     @Enumerated(EnumType.STRING)
