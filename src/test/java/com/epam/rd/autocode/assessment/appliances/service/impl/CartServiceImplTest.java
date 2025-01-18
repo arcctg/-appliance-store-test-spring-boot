@@ -8,10 +8,15 @@ import com.epam.rd.autocode.assessment.appliances.repository.CartRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,9 +28,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CartServiceImplTest {
 
     @Mock
@@ -40,141 +48,130 @@ class CartServiceImplTest {
     @Mock
     private OrderRowRepository orderRowRepository;
 
-    @InjectMocks
-    private CartServiceImpl cartService;
-
     @Mock
     private SecurityContext securityContext;
 
     @Mock
     private Authentication authentication;
 
+    @Mock
+    private HttpServletRequest request;
+
+    @InjectMocks
+    private CartServiceImpl cartService;
+
+    @Captor
+    private ArgumentCaptor<OrderRow> orderRowCaptor;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     void testAddItemToCart_NewItem() {
-        // Mock authentication setup
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
 
-        // Prepare mock client and cart
         Client client = new Client();
-        Cart cart = new Cart();
-        cart.setClient(client);
-        cart.setOrderRowList(new ArrayList<>());
+        Cart cart = createCart(client);
 
-        // Mock behavior for client and cart retrieval
         when(clientService.getClientByEmail("test@example.com")).thenReturn(Optional.of(client));
         when(cartRepository.findByClient(client)).thenReturn(Optional.of(cart));
         when(cartRepository.save(cart)).thenReturn(cart);
 
-        // Prepare mock appliance
-        Appliance appliance = new Appliance();
-        appliance.setId(1L);
-        appliance.setPrice(BigDecimal.valueOf(100));
-
+        Appliance appliance = createAppliance(BigDecimal.valueOf(100));
         when(applianceService.getApplianceById(1L)).thenReturn(appliance);
 
-        // Mock saving the order row
-        when(orderRowRepository.save(any(OrderRow.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Call method under test
         cartService.addItemToCart(1L, 2L);
 
-        // Assert and verify cart contents
-        assertEquals(1, cart.getOrderRowList().size());
-        OrderRow addedOrderRow = cart.getOrderRowList().get(0);
-        assertNotNull(addedOrderRow);  // Ensure it's not null
-        assertEquals(appliance, addedOrderRow.getAppliance());
-        assertEquals(2L, addedOrderRow.getNumber());
-        assertEquals(BigDecimal.valueOf(200), addedOrderRow.getAmount());
-
-        // Verify cart was saved
-        verify(cartRepository, times(1)).save(cart);
+        verify(orderRowRepository).save(orderRowCaptor.capture());
+        OrderRow savedOrderRow = orderRowCaptor.getValue();
+        assertAll(
+            () -> assertEquals(appliance, savedOrderRow.getAppliance()),
+            () -> assertEquals(2L, savedOrderRow.getNumber()),
+            () -> assertEquals(BigDecimal.valueOf(200), savedOrderRow.getAmount())
+        );
+        verify(cartRepository).save(cart);
     }
 
     @Test
     void testGetCurrentUserCart_AnonymousUser() {
-        Authentication authentication = mock(AnonymousAuthenticationToken.class);
-        SecurityContext securityContext = mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
+        Authentication anonymousAuthentication = mock(AnonymousAuthenticationToken.class);
+        when(securityContext.getAuthentication()).thenReturn(anonymousAuthentication);
 
         Cart anonymousCart = new Cart();
-        when(cartRepository.findByClientIsNull()).thenReturn(Optional.of(anonymousCart));
-        when(cartRepository.save(anonymousCart)).thenReturn(anonymousCart);
+        when(cartRepository.findById(anyLong())).thenReturn(Optional.of(anonymousCart));
 
         Cart result = cartService.getCurrentUserCart();
 
-        assertEquals(anonymousCart, result);
-        verify(cartRepository, times(1)).findByClientIsNull();
-        verify(cartRepository, times(1)).save(anonymousCart);
+        assertSame(anonymousCart, result);
+        verify(cartRepository).findById(anyLong());
+        verify(cartRepository, never()).save(anonymousCart);
     }
 
     @Test
     void testEditItemInCart_ItemExists() {
-        // Mock authentication setup
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
 
-        // Prepare mock client and cart
         Client client = new Client();
-        Cart cart = new Cart();
-        cart.setClient(client);
-        cart.setOrderRowList(new ArrayList<>());
+        Cart cart = createCart(client);
 
-        // Initialize the Appliance and its BigDecimal field (e.g., price or some other field)
-        Appliance appliance = new Appliance();
-        appliance.setPrice(new BigDecimal("10.0")); // Mock a non-null BigDecimal value
-
-        OrderRow orderRow = new OrderRow();
-        orderRow.setId(1L);
-        orderRow.setAppliance(appliance); // Set the appliance with price
-        orderRow.setNumber(1L);
+        Appliance appliance = createAppliance(BigDecimal.TEN);
+        OrderRow orderRow = createOrderRow(appliance, 1L);
         cart.getOrderRowList().add(orderRow);
 
-        // Mock client and cart retrieval
         when(clientService.getClientByEmail("test@example.com")).thenReturn(Optional.of(client));
         when(cartRepository.findByClient(client)).thenReturn(Optional.of(cart));
-        when(cartRepository.save(cart)).thenReturn(cart);
 
-        // Call method under test
         cartService.editItemInCart(1L, 3L);
 
-        // Assert updated cart contents
-        assertEquals(3L, cart.getOrderRowList().get(0).getNumber());
-        verify(cartRepository, times(1)).save(cart);
+        assertEquals(3L, orderRow.getNumber());
+        assertEquals(BigDecimal.valueOf(30), orderRow.getAmount());
+        verify(cartRepository).save(cart);
     }
-
 
     @Test
     void testDeleteItemFromCart() {
         cartService.deleteItemFromCart(1L);
-
-        verify(orderRowRepository, times(1)).deleteById(1L);
+        verify(orderRowRepository).deleteById(1L);
     }
 
     @Test
     void testMergeCarts() {
-        Cart userCart = new Cart();
-        userCart.setOrderRowList(new ArrayList<>());
-
+        Cart userCart = createCart(new Client());
         Cart anonymousCart = new Cart();
-        OrderRow anonymousOrderRow = new OrderRow();
-        anonymousOrderRow.setAppliance(new Appliance());
-        anonymousOrderRow.getAppliance().setId(1L);
-        anonymousOrderRow.setNumber(2L);
-        anonymousOrderRow.setAmount(BigDecimal.valueOf(200));
-        anonymousCart.setOrderRowList(List.of(anonymousOrderRow));
+        anonymousCart.setOrderRowList(List.of(createOrderRow(createAppliance(BigDecimal.valueOf(100)), 2L)));
 
         cartService.mergeCarts(userCart, anonymousCart);
 
         assertEquals(1, userCart.getOrderRowList().size());
-        assertEquals(2L, userCart.getOrderRowList().get(0).getNumber());
-        assertEquals(BigDecimal.valueOf(200), userCart.getOrderRowList().get(0).getAmount());
+        OrderRow mergedOrderRow = userCart.getOrderRowList().get(0);
+        assertEquals(2L, mergedOrderRow.getNumber());
+        assertEquals(BigDecimal.valueOf(200), mergedOrderRow.getAmount());
+    }
+
+    private Cart createCart(Client client) {
+        Cart cart = new Cart();
+        cart.setClient(client);
+        cart.setOrderRowList(new ArrayList<>());
+        return cart;
+    }
+
+    private Appliance createAppliance(BigDecimal price) {
+        Appliance appliance = new Appliance();
+        appliance.setId(1L);
+        appliance.setPrice(price);
+        return appliance;
+    }
+
+    private OrderRow createOrderRow(Appliance appliance, Long number) {
+        OrderRow orderRow = new OrderRow();
+        orderRow.setId(1L);
+        orderRow.setAppliance(appliance);
+        orderRow.setNumber(number);
+        orderRow.setAmount(BigDecimal.valueOf(number).multiply(appliance.getPrice()));
+        return orderRow;
     }
 }

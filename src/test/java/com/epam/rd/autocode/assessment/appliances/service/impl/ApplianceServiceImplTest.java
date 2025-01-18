@@ -1,5 +1,13 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
@@ -7,24 +15,23 @@ import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import com.epam.rd.autocode.assessment.appliances.repository.ApplianceRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.ManufacturerRepository;
-import com.epam.rd.autocode.assessment.appliances.service.impl.ApplianceServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class ApplianceServiceImplTest {
+
+    private static final Long APPLIANCE_ID = 1L;
+    private static final String APPLIANCE_NAME = "Test Appliance";
 
     @Mock
     private ApplianceRepository applianceRepository;
@@ -35,14 +42,9 @@ class ApplianceServiceImplTest {
     @InjectMocks
     private ApplianceServiceImpl applianceService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     void testSaveAppliance() {
-        Appliance appliance = new Appliance();
+        Appliance appliance = createTestAppliance();
         when(applianceRepository.save(appliance)).thenReturn(appliance);
 
         Appliance savedAppliance = applianceService.saveAppliance(appliance);
@@ -53,31 +55,28 @@ class ApplianceServiceImplTest {
 
     @Test
     void testGetApplianceById_Found() {
-        Appliance appliance = new Appliance();
-        appliance.setId(1L);
-        when(applianceRepository.findById(1L)).thenReturn(Optional.of(appliance));
+        Appliance appliance = createTestAppliance();
+        when(applianceRepository.findById(APPLIANCE_ID)).thenReturn(Optional.of(appliance));
 
-        Appliance foundAppliance = applianceService.getApplianceById(1L);
+        Appliance foundAppliance = applianceService.getApplianceById(APPLIANCE_ID);
 
         assertEquals(appliance, foundAppliance);
-        verify(applianceRepository, times(1)).findById(1L);
+        verify(applianceRepository, times(1)).findById(APPLIANCE_ID);
     }
 
     @Test
     void testGetApplianceById_NotFound() {
-        when(applianceRepository.findById(1L)).thenReturn(Optional.empty());
+        when(applianceRepository.findById(APPLIANCE_ID)).thenReturn(Optional.empty());
 
-        assertThrows(ApplianceNotFoundException.class, () -> applianceService.getApplianceById(1L));
-        verify(applianceRepository, times(1)).findById(1L);
+        assertThrows(ApplianceNotFoundException.class, () -> applianceService.getApplianceById(APPLIANCE_ID));
+        verify(applianceRepository, times(1)).findById(APPLIANCE_ID);
     }
 
     @Test
     void testDeleteApplianceById() {
-        Long id = 1L;
+        applianceService.deleteApplianceById(APPLIANCE_ID);
 
-        applianceService.deleteApplianceById(id);
-
-        verify(applianceRepository, times(1)).deleteById(id);
+        verify(applianceRepository, times(1)).deleteById(APPLIANCE_ID);
     }
 
     @Test
@@ -116,5 +115,12 @@ class ApplianceServiceImplTest {
         PowerType[] powerTypes = PowerType.values();
 
         assertArrayEquals(powerTypes, applianceService.getPowerTypes());
+    }
+
+    private Appliance createTestAppliance() {
+        Appliance appliance = new Appliance();
+        appliance.setId(APPLIANCE_ID);
+        appliance.setName(APPLIANCE_NAME);
+        return appliance;
     }
 }

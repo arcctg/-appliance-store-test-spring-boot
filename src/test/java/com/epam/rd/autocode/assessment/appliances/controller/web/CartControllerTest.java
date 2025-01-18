@@ -1,19 +1,32 @@
 package com.epam.rd.autocode.assessment.appliances.controller.web;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+@ExtendWith(MockitoExtension.class)
 class CartControllerTest {
+
+    private static final String BASE_URL = "/cart";
+    private static final Long APPLIANCE_ID = 1L;
+    private static final Long ORDER_ID = 1L;
+    private static final Long NUMBER_TWO = 2L;
+    private static final Long NUMBER_THREE = 3L;
 
     private MockMvc mockMvc;
 
@@ -25,49 +38,52 @@ class CartControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(cartController).build();
     }
 
     @Test
     void testViewCart() throws Exception {
-        mockMvc.perform(get("/cart"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("cart/cart"));
+        mockMvc.perform(get(BASE_URL))
+            .andExpect(status().isOk())
+            .andExpect(view().name("cart/cart"));
 
         verifyNoInteractions(cartService);
     }
 
     @Test
     void testAddItemToCart() throws Exception {
-        mockMvc.perform(post("/cart/add-item")
-                        .param("applianceId", "1")
-                        .param("number", "2")
-                        .header("Referer", "/cart"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
+        mockMvc.perform(post(BASE_URL + "/add-item")
+                .param("applianceId", APPLIANCE_ID.toString())
+                .param("number", NUMBER_TWO.toString())
+                .header("Referer", BASE_URL))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(BASE_URL));
 
-        verify(cartService, times(1)).addItemToCart(1L, 2L);
+        verify(cartService).addItemToCart(APPLIANCE_ID, NUMBER_TWO);
+        verifyNoMoreInteractions(cartService);
     }
 
     @Test
     void testEditItemInCart() throws Exception {
-        mockMvc.perform(post("/cart/edit-item")
-                        .param("orderId", "1")
-                        .param("number", "3"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
+        mockMvc.perform(post(BASE_URL + "/edit-item")
+                .param("orderId", ORDER_ID.toString())
+                .param("number", NUMBER_THREE.toString()))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(BASE_URL));
 
-        verify(cartService, times(1)).editItemInCart(1L, 3L);
+        verify(cartService).editItemInCart(ORDER_ID, NUMBER_THREE);
+        verifyNoMoreInteractions(cartService);
     }
 
     @Test
     void testDeleteItemFromCart() throws Exception {
-        mockMvc.perform(get("/cart/delete-item")
-                        .param("orderId", "1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cart"));
+        mockMvc.perform(get(BASE_URL + "/delete-item")
+                .param("orderId", ORDER_ID.toString()))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(BASE_URL));
 
-        verify(cartService, times(1)).deleteItemFromCart(1L);
+        verify(cartService).deleteItemFromCart(ORDER_ID);
+        verifyNoMoreInteractions(cartService);
     }
 }
+

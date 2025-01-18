@@ -1,27 +1,40 @@
 package com.epam.rd.autocode.assessment.appliances.controller.web;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+@ExtendWith(MockitoExtension.class)
 class EmployeeControllerTest {
+
+    private static final String BASE_URL = "/employees";
+    private static final Long EMPLOYEE_ID = 1L;
 
     private MockMvc mockMvc;
 
@@ -33,7 +46,6 @@ class EmployeeControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(employeeController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
@@ -41,71 +53,62 @@ class EmployeeControllerTest {
 
     @Test
     void testGetAllEmployees() throws Exception {
-        // Arrange: Create a mock pageable result
-        PageRequest pageable = PageRequest.of(0, 5);
+        PageRequest pageable = PageRequest.of(0, 5, Sort.by("id"));
         Page<Employee> mockPage = new PageImpl<>(Collections.emptyList());
         when(employeeService.getAllEmployees(pageable)).thenReturn(mockPage);
 
-        // Act & Assert
-        mockMvc.perform(get("/employees"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("employee/employees"))
-                .andExpect(model().attributeExists("pageable"));
+        mockMvc.perform(get(BASE_URL))
+            .andExpect(status().isOk())
+            .andExpect(view().name("employee/employees"))
+            .andExpect(model().attributeExists("employees", "pageable"));
 
-        // Verify service method is called
-        verify(employeeService, times(1)).getAllEmployees(any(Pageable.class));
+        verify(employeeService).getAllEmployees(any(Pageable.class));
+        verifyNoMoreInteractions(employeeService);
     }
 
     @Test
     void testAddEmployeeForm() throws Exception {
-        // Test if the add employee form is displayed correctly
-        mockMvc.perform(get("/employees/add"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("employee/newEmployee"))
-                .andExpect(model().attributeExists("employee"));
+        mockMvc.perform(get(BASE_URL + "/add"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("employee/newEmployee"))
+            .andExpect(model().attributeExists("employee"));
     }
 
     @Test
     void testEditEmployeeForm() throws Exception {
-        Long employeeId = 1L;
         Employee mockEmployee = new Employee();
-        when(employeeService.getEmployeeById(employeeId)).thenReturn(mockEmployee);
+        when(employeeService.getEmployeeById(EMPLOYEE_ID)).thenReturn(mockEmployee);
 
-        // Test if the edit employee form is displayed correctly
-        mockMvc.perform(get("/employees/edit")
-                        .param("id", String.valueOf(employeeId)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("employee/editEmployee"))
-                .andExpect(model().attributeExists("employee"))
-                .andExpect(model().attribute("employee", mockEmployee));
+        mockMvc.perform(get(BASE_URL + "/edit").param("id", EMPLOYEE_ID.toString()))
+            .andExpect(status().isOk())
+            .andExpect(view().name("employee/editEmployee"))
+            .andExpect(model().attributeExists("employee"))
+            .andExpect(model().attribute("employee", mockEmployee));
 
-        // Verify service method is called
-        verify(employeeService, times(1)).getEmployeeById(employeeId);
+        verify(employeeService).getEmployeeById(EMPLOYEE_ID);
+        verifyNoMoreInteractions(employeeService);
     }
 
     @Test
     void testSaveEmployee() throws Exception {
         Employee mockEmployee = new Employee();
 
-        mockMvc.perform(post("/employees/add-employee")
-                        .flashAttr("employee", mockEmployee))
+        mockMvc.perform(post(BASE_URL + "/add-employee").flashAttr("employee", mockEmployee))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/employees"));
+                .andExpect(redirectedUrl(BASE_URL));
 
-        verify(employeeService, times(1)).saveEmployee(mockEmployee);
+        verify(employeeService).saveEmployee(mockEmployee);
+        verifyNoMoreInteractions(employeeService);
     }
 
     @Test
     void testDeleteEmployee() throws Exception {
-        Long employeeId = 1L;
-        doNothing().when(employeeService).deleteEmployeeById(employeeId);
+        doNothing().when(employeeService).deleteEmployeeById(EMPLOYEE_ID);
 
-        // Test deleting an employee
-        mockMvc.perform(get("/employees/delete")
-                        .param("id", String.valueOf(employeeId)))
-                .andExpect(status().is3xxRedirection());
+        mockMvc.perform(get(BASE_URL + "/delete").param("id", EMPLOYEE_ID.toString()))
+            .andExpect(status().is3xxRedirection());
 
-        // Verify service method is called to delete employee
-        verify(employeeService, times(1)).deleteEmployeeById(employeeId);
+        verify(employeeService).deleteEmployeeById(EMPLOYEE_ID);
+        verifyNoMoreInteractions(employeeService);
     }
 }

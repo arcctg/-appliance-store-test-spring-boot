@@ -8,7 +8,9 @@ import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,28 +24,23 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
 
-    @Mock private OrderRepository orderRepository;
-    @Mock private CartService cartService;
-    @Mock private UserService userService;
-    @Mock private OrderRowRepository orderRowRepository;
+    @Mock
+    private OrderRepository orderRepository;
 
+    @Mock
+    private CartService cartService;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private OrderRowRepository orderRowRepository;
+
+    @InjectMocks
     private OrderServiceImpl orderService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        orderService = new OrderServiceImpl(orderRepository, cartService, userService, orderRowRepository);
-    }
-
-    private void mockSecurityContext(String email) {
-        Authentication authentication = mock(Authentication.class);
-        SecurityContext securityContext = mock(SecurityContext.class);
-        when(authentication.getName()).thenReturn(email);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-    }
 
     @AfterEach
     void tearDown() {
@@ -141,5 +138,13 @@ class OrderServiceImplTest {
         verify(order).setStatus(Status.PENDING);
         verify(orderRepository).save(order);
         verify(order, times(0)).setEmployee(any(Employee.class));
+    }
+
+    private void mockSecurityContext(String email) {
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Mockito.lenient().when(authentication.getName()).thenReturn(email);
+        Mockito.lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }

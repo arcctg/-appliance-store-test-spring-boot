@@ -1,117 +1,148 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
+import com.epam.rd.autocode.assessment.appliances.service.UserService;
+import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
+
+    private static final Long CLIENT_ID = 1L;
+    private static final String CLIENT_EMAIL = "test@example.com";
+    private static final String CLIENT_PASSWORD = "password";
+    private static final String ENCODED_PASSWORD = "encodedPassword";
 
     @Mock
     private ClientRepository clientRepository;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
+
     @InjectMocks
     private ClientServiceImpl clientService;
 
+    private Client client;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        client = createTestClient();
     }
 
     @Test
-    void testSaveClient() {
-        Client client = new Client();
+    void testUpdateClient_Found() {
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.of(client));
+        when(passwordEncoder.encode(CLIENT_PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(clientRepository.save(client)).thenReturn(client);
 
-        Client savedClient = clientService.saveClient(client);
+        Client updatedClient = clientService.updateClient(client);
 
-        assertEquals(client, savedClient);
-        verify(clientRepository, times(1)).save(client);
+        assertEquals(client, updatedClient);
+        verify(clientRepository).save(client);
+    }
+
+    @Test
+    void testUpdateClient_NotFound() {
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ClientNotFoundException.class, () -> clientService.updateClient(client));
+        verify(clientRepository, never()).save(any());
     }
 
     @Test
     void testGetClientById_Found() {
-        Client client = new Client();
-        client.setId(1L);
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.of(client));
 
-        when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
-
-        Client foundClient = clientService.getClientById(1L);
+        Client foundClient = clientService.getClientById(CLIENT_ID);
 
         assertEquals(client, foundClient);
-        verify(clientRepository, times(1)).findById(1L);
+        verify(clientRepository).findById(CLIENT_ID);
     }
 
     @Test
     void testGetClientById_NotFound() {
-        when(clientRepository.findById(1L)).thenReturn(Optional.empty());
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.empty());
 
-        assertThrows(ClientNotFoundException.class, () -> clientService.getClientById(1L));
-        verify(clientRepository, times(1)).findById(1L);
+        assertThrows(ClientNotFoundException.class, () -> clientService.getClientById(CLIENT_ID));
+        verify(clientRepository).findById(CLIENT_ID);
     }
 
     @Test
     void testGetClientByEmail_Found() {
-        Client client = new Client();
-        client.setEmail("test@example.com");
+        when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(Optional.of(client));
 
-        when(clientRepository.findByEmail("test@example.com")).thenReturn(Optional.of(client));
+        Optional<Client> result = clientService.getClientByEmail(CLIENT_EMAIL);
 
-        Optional<Client> foundClient = clientService.getClientByEmail("test@example.com");
-
-        assertTrue(foundClient.isPresent());
-        assertEquals(client, foundClient.get());
+        assertTrue(result.isPresent());
+        assertEquals(client, result.get());
     }
 
     @Test
     void testGetClientByEmail_NotFound() {
-        when(clientRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+        when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(Optional.empty());
 
-        Optional<Client> foundClient = clientService.getClientByEmail("nonexistent@example.com");
+        Optional<Client> result = clientService.getClientByEmail(CLIENT_EMAIL);
 
-        assertFalse(foundClient.isPresent());
+        assertFalse(result.isPresent());
     }
 
     @Test
-    void testDeleteClientById() {
-        clientService.deleteClientById(1L);
+    void testDeleteClientById_Found() {
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.of(client));
 
-        verify(clientRepository, times(1)).deleteById(1L);
+        clientService.deleteClientById(CLIENT_ID);
+
+        verify(clientRepository).delete(client);
+    }
+
+    @Test
+    void testDeleteClientById_NotFound() {
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ClientNotFoundException.class, () -> clientService.deleteClientById(CLIENT_ID));
+        verify(clientRepository, never()).delete(any(Client.class));
     }
 
     @Test
     void testToggleClientBlockById_ClientFound() {
-        Client client = new Client();
-        client.setId(1L);
-        client.setEnabled(true);
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.of(client));
 
-        when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
-        when(clientRepository.save(client)).thenReturn(client);
-
-        clientService.toggleClientBlockById(1L);
+        clientService.toggleClientBlockById(CLIENT_ID);
 
         assertFalse(client.getEnabled());
-        verify(clientRepository, times(1)).save(client);
+        verify(clientRepository).save(client);
     }
 
     @Test
     void testToggleClientBlockById_ClientNotFound() {
-        when(clientRepository.findById(1L)).thenReturn(Optional.empty());
+        when(clientRepository.findById(CLIENT_ID)).thenReturn(Optional.empty());
 
-        clientService.toggleClientBlockById(1L);
+        clientService.toggleClientBlockById(CLIENT_ID);
 
         verify(clientRepository, never()).save(any(Client.class));
     }
@@ -126,6 +157,14 @@ class ClientServiceImplTest {
         Page<Client> result = clientService.getAllClients(pageable);
 
         assertEquals(2, result.getContent().size());
-        verify(clientRepository, times(1)).findAll(pageable);
+        verify(clientRepository).findAll(pageable);
+    }
+
+    private Client createTestClient() {
+        Client client1 = new Client();
+        client1.setId(CLIENT_ID);
+        client1.setEmail(CLIENT_EMAIL);
+        client1.setPassword(CLIENT_PASSWORD);
+        return client1;
     }
 }
