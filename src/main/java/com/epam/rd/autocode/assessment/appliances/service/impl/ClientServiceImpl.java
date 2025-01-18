@@ -5,7 +5,9 @@ import com.epam.rd.autocode.assessment.appliances.exception.UserAlreadyExistsExc
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
+import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final UserService userService;
+    private final CartService cartService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     /**
@@ -28,12 +31,14 @@ public class ClientServiceImpl implements ClientService {
      *
      * @param clientRepository the client repository
      * @param userService the user service
+     * @param cartService the cart service
      * @param passwordEncoder the password encoder
      */
     public ClientServiceImpl(
-            ClientRepository clientRepository, UserService userService, BCryptPasswordEncoder passwordEncoder) {
+            ClientRepository clientRepository, UserService userService, CartService cartService, BCryptPasswordEncoder passwordEncoder) {
         this.clientRepository = clientRepository;
         this.userService = userService;
+        this.cartService = cartService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -92,6 +97,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClientById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException(id));
+        cartService.deleteCartByClient(client);
         clientRepository.delete(client);
     }
 

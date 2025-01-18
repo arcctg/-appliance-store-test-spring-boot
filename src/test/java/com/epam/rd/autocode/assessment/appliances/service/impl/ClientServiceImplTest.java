@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
+import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import java.util.Arrays;
 import java.util.Optional;
@@ -39,7 +40,7 @@ class ClientServiceImplTest {
     private ClientRepository clientRepository;
 
     @Mock
-    private UserService userService;
+    private CartService cartService;
 
     @Mock
     private BCryptPasswordEncoder passwordEncoder;

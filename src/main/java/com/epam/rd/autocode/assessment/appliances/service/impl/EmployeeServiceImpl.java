@@ -4,7 +4,9 @@ import com.epam.rd.autocode.assessment.appliances.exception.EmployeeNotFoundExce
 import com.epam.rd.autocode.assessment.appliances.exception.UserAlreadyExistsException;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
+import com.epam.rd.autocode.assessment.appliances.model.enums.Status;
 import com.epam.rd.autocode.assessment.appliances.repository.EmployeeRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import org.springframework.data.domain.Page;
@@ -17,12 +19,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final OrderRepository orderRepository;
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserService userService,
-        BCryptPasswordEncoder passwordEncoder) {
+        BCryptPasswordEncoder passwordEncoder, OrderRepository orderRepository) {
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -59,6 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployeeById(Long id) {
+        orderRepository.findByEmployee(getEmployeeById(id)).ifPresent(order -> order.setEmployee(null));
         employeeRepository.deleteById(id);
     }
 

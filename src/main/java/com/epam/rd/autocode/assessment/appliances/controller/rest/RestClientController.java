@@ -30,7 +30,7 @@ public class RestClientController {
     @Loggable
     @PostMapping
     public ResponseEntity<Client> addClient(@RequestBody @Valid Client client) {
-        return ResponseEntity.ok(clientService.updateClient(client));
+        return ResponseEntity.ok(clientService.addClient(client));
     }
 
     @Loggable

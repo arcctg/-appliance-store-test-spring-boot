@@ -1,28 +1,28 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
-import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
-
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
+import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
+import com.epam.rd.autocode.assessment.appliances.model.enums.Status;
 import com.epam.rd.autocode.assessment.appliances.repository.CartRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -30,24 +30,26 @@ public class CartServiceImpl implements CartService {
     private static final int COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 днів
     private final CartRepository cartRepository;
     private final ApplianceService applianceService;
-    private final ClientService clientService;
     private final OrderRowRepository orderRowRepository;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
+    private final ClientRepository clientRepository;
+    private final OrderRepository orderRepository;
 
     public CartServiceImpl(
         CartRepository cartRepository,
         ApplianceService applianceService,
-        ClientService clientService,
         OrderRowRepository orderRowRepository,
         HttpServletRequest request,
-        HttpServletResponse response) {
+        HttpServletResponse response, ClientRepository clientRepository,
+        OrderRepository orderRepository) {
         this.cartRepository = cartRepository;
         this.applianceService = applianceService;
-        this.clientService = clientService;
         this.orderRowRepository = orderRowRepository;
         this.request = request;
         this.response = response;
+        this.clientRepository = clientRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -64,8 +66,8 @@ public class CartServiceImpl implements CartService {
                 });
         }
 
-        return clientService
-                .getClientByEmail(auth.getName())
+        return clientRepository
+                .findByEmail(auth.getName())
                 .map(client -> {
                     Cart clientCart = cartRepository.findByClient(client).orElseGet(() -> {
                         Cart cart = new Cart();
@@ -155,6 +157,20 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCart(Cart cart) {
         cartRepository.delete(cart);
+    }
+
+    @Override
+    public void deleteCartByClient(Client client) {
+        cartRepository.findByClient(client).ifPresent(c -> {
+            c.setClient(null);
+            orderRowRepository.deleteAll(c.getOrderRowList());
+            cartRepository.delete(c);
+        });
+
+        orderRepository.findByClient(client).ifPresent(order -> {
+            order.setClient(null);
+            order.setStatus(Status.CANCELLED);
+        });
     }
 
     private Long getAnonymousCartId() {

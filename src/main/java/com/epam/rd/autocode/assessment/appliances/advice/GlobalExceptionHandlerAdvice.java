@@ -27,6 +27,8 @@ import java.nio.file.AccessDeniedException;
 @ControllerAdvice(basePackages = "com.epam.rd.autocode.assessment.appliances.controller.web")
 public class GlobalExceptionHandlerAdvice {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandlerAdvice.class);
+    private static final String ERROR_MESSAGE = "An unexpected error occurred: ";
+    private static final String MESSAGE = "message";
 
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDeniedException() {
@@ -44,15 +46,20 @@ public class GlobalExceptionHandlerAdvice {
     }
 
     @ExceptionHandler({UsernameNotFoundException.class, NotFoundException.class})
-    public void handleNotFoundException(RuntimeException ex) {
-        logger.error(ex.getMessage());
+    public String handleNotFoundException(RuntimeException ex, Model model) {
+        String message = ex.getMessage();
+
+        model.addAttribute(MESSAGE, message);
+        logger.error(message);
+
+        return "error/generalError";
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleNotValidException(MethodArgumentNotValidException ex, Model model) {
         String message = getErrorMessage(ex);
 
-        model.addAttribute("message", message);
+        model.addAttribute(MESSAGE, message);
         logger.warn(message);
 
         return "error/notValidError";
@@ -60,9 +67,9 @@ public class GlobalExceptionHandlerAdvice {
 
     @ExceptionHandler(Exception.class)
     public String handleGlobalException(Exception ex, Model model) {
-        String message = "An unexpected error occurred: " + ex.getMessage();
+        String message = ERROR_MESSAGE + ex.getMessage();
 
-        model.addAttribute("message", message);
+        model.addAttribute(MESSAGE, message);
         logger.error(message);
         ex.printStackTrace();
 

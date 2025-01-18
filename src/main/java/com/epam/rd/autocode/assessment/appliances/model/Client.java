@@ -1,7 +1,9 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

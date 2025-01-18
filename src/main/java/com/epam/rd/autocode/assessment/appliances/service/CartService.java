@@ -1,6 +1,7 @@
 package com.epam.rd.autocode.assessment.appliances.service;
 
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
+import com.epam.rd.autocode.assessment.appliances.model.Client;
 
 public interface CartService {
     Cart getCurrentUserCart();
@@ -12,4 +13,6 @@ public interface CartService {
     void deleteItemFromCart(Long orderId);
 
     void deleteCart(Cart cart);
+
+    void deleteCartByClient(Client client);
 }

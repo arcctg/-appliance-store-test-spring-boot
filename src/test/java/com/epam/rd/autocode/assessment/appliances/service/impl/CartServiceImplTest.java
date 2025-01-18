@@ -5,6 +5,7 @@ import com.epam.rd.autocode.assessment.appliances.model.Cart;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
 import com.epam.rd.autocode.assessment.appliances.repository.CartRepository;
+import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
@@ -43,7 +44,7 @@ class CartServiceImplTest {
     private ApplianceService applianceService;
 
     @Mock
-    private ClientService clientService;
+    private ClientRepository clientRepository;
 
     @Mock
     private OrderRowRepository orderRowRepository;
@@ -76,7 +77,7 @@ class CartServiceImplTest {
         Client client = new Client();
         Cart cart = createCart(client);
 
-        when(clientService.getClientByEmail("test@example.com")).thenReturn(Optional.of(client));
+        when(clientRepository.findByEmail("test@example.com")).thenReturn(Optional.of(client));
         when(cartRepository.findByClient(client)).thenReturn(Optional.of(cart));
         when(cartRepository.save(cart)).thenReturn(cart);
 
@@ -122,7 +123,7 @@ class CartServiceImplTest {
         OrderRow orderRow = createOrderRow(appliance, 1L);
         cart.getOrderRowList().add(orderRow);
 
-        when(clientService.getClientByEmail("test@example.com")).thenReturn(Optional.of(client));
+        when(clientRepository.findByEmail("test@example.com")).thenReturn(Optional.of(client));
         when(cartRepository.findByClient(client)).thenReturn(Optional.of(cart));
 
         cartService.editItemInCart(1L, 3L);

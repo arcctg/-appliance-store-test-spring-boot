@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,32 +26,44 @@ class EmployeeServiceImplTest {
 
     private static final Long EMPLOYEE_ID = 1L;
     private static final String EMPLOYEE_NAME = "John Doe";
+    private static final String EMPLOYEE_EMAIL = "test@example.com";
+    private static final String EMPLOYEE_PASSWORD = "password";
+    private static final String ENCODED_PASSWORD = "encodedPassword";
 
     @Mock
     private EmployeeRepository employeeRepository;
+
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
 
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
     private Employee employee;
-    private Pageable pageable;
 
     @BeforeEach
     void setUp() {
         employee = createTestEmployee();
-        pageable = PageRequest.of(0, 10);
     }
 
     @Test
-    void testUpdateEmployee() {
+    void testUpdateEmployee_Found() {
+        when(employeeRepository.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
+        when(passwordEncoder.encode(EMPLOYEE_PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(employeeRepository.save(employee)).thenReturn(employee);
 
-        Employee savedEmployee = employeeService.updateEmployee(employee);
+        Employee updatedEmployee = employeeService.updateEmployee(employee);
 
-        assertNotNull(savedEmployee);
-        assertEquals(employee.getId(), savedEmployee.getId());
-        assertEquals(employee.getName(), savedEmployee.getName());
-        verify(employeeRepository, times(1)).save(employee);
+        assertEquals(employee, updatedEmployee);
+        verify(employeeRepository).save(employee);
+    }
+
+    @Test
+    void testUpdateEmployee_NotFound() {
+        when(employeeRepository.findById(EMPLOYEE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.updateEmployee(employee));
+        verify(employeeRepository, never()).save(any());
     }
 
     @Test
@@ -82,6 +95,8 @@ class EmployeeServiceImplTest {
 
     @Test
     void testGetAllEmployees() {
+        Pageable pageable = PageRequest.of(0, 10);
+
         Page<Employee> employeePage = new PageImpl<>(List.of(employee));
 
         when(employeeRepository.findAll(pageable)).thenReturn(employeePage);
@@ -97,6 +112,9 @@ class EmployeeServiceImplTest {
         Employee employee1 = new Employee();
         employee1.setId(EMPLOYEE_ID);
         employee1.setName(EMPLOYEE_NAME);
+        employee1.setEmail(EMPLOYEE_EMAIL);
+        employee1.setPassword(EMPLOYEE_PASSWORD);
+
         return employee1;
     }
 }
