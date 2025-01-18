@@ -3,6 +3,7 @@ package com.epam.rd.autocode.assessment.appliances.controller.web;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class AuthController {
 
     @Loggable
     @PostMapping("new-user")
-    public String newUser(@ModelAttribute Client client) {
+    public String newUser(@ModelAttribute @Valid Client client) {
         clientService.addClient(client);
         return "redirect:/";
     }

@@ -11,5 +11,4 @@ public interface OrderService {
     Order  createOrder();
 
     void updateStatusById(Long id, Status status);
-
 }

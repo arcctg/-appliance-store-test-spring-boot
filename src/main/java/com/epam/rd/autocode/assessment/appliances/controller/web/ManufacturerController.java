@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.service.ManufacturerService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,8 @@ public class ManufacturerController {
 
     @Loggable
     @GetMapping
-    public String getAllManufacturers(
-            Model model,
-            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+    public String getAllManufacturers(@PageableDefault(size = 5, sort = "id") Pageable pageable, Model model) {
         model.addAttribute("manufacturers", manufacturerService.getAllManufacturers(pageable));
-        model.addAttribute("pageable", pageable);
 
         return "manufacture/manufacturers";
     }
@@ -34,6 +32,7 @@ public class ManufacturerController {
     @GetMapping("/add")
     public String addManufacturerForm(Model model) {
         model.addAttribute("manufacturer", new Manufacturer());
+
         return "manufacture/newManufacturer";
     }
 
@@ -41,20 +40,23 @@ public class ManufacturerController {
     @GetMapping("/edit")
     public String editManufacturerForm(@RequestParam("id") Long id, Model model) {
         model.addAttribute("manufacturer", manufacturerService.getManufacturerById(id));
+
         return "manufacture/editManufacturer";
     }
 
     @Loggable
     @PostMapping({"/add-manufacturer", "/edit-manufacturer"})
-    public String addManufacturer(@ModelAttribute Manufacturer manufacturer) {
+    public String addManufacturer(@ModelAttribute @Valid Manufacturer manufacturer) {
         manufacturerService.saveManufacturer(manufacturer);
+
         return "redirect:/manufacturers";
     }
 
     @Loggable
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteManufacturer(@RequestParam("id") Long id, HttpServletRequest request) {
         manufacturerService.deleteManufacturerById(id);
+
         return "redirect:" + request.getHeader("Referer");
     }
 }

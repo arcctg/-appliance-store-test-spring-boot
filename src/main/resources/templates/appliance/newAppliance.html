@@ -10,7 +10,7 @@
 <div th:insert="~{menunavy::navy}"></div>
 <div class="container mt-4">
     <h1 th:text="#{object.appliance.new}"></h1>
-    <form th:action="@{/appliances/add-appliance}" th:object="${appliance}" method="post">
+    <form th:action="@{add-appliance}" th:object="${appliance}" method="post">
         <div class="mb-3">
             <label for="name" th:text="#{object.appliance.name}"/>
             <input class="form-control" id="name" required th:field="*{name}" type="text">
@@ -48,11 +48,12 @@
         </div>
         <div class="mb-3">
             <label for="power" th:text="#{object.appliance.power}"/>
-            <input class="form-control" id="power" required th:field="*{power}" type="number">
+            <input class="form-control" id="power" required th:field="*{power}" min="1" type="number">
         </div>
         <div class="mb-3">
             <label for="price" th:text="#{object.appliance.price}"/>
-            <input class="form-control" id="price" required step="0.01" th:field="*{price}" type="number">
+            <input class="form-control" id="price" required step="0.01" min="0.01" th:field="*{price}"
+                   type="number">
         </div>
         <div class="mb-3">
             <input class="btn btn-primary" th:value="#{btn.submit}" type="submit"/>

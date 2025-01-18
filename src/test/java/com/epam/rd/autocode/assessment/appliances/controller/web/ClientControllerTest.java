@@ -5,8 +5,11 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,7 +96,7 @@ class ClientControllerTest {
         Client client = createTestClient();
         when(clientService.updateClient(client)).thenReturn(client);
 
-        mockMvc.perform(post(BASE_URL + "/edit-client").flashAttr("client", client))
+        mockMvc.perform(put(BASE_URL + "/edit-client").flashAttr("client", client))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(BASE_URL));
 
@@ -118,7 +121,7 @@ class ClientControllerTest {
     void testToggleClient() throws Exception {
         doNothing().when(clientService).toggleClientBlockById(CLIENT_ID);
 
-        mockMvc.perform(post(BASE_URL + "/toggle").param("id", CLIENT_ID.toString()))
+        mockMvc.perform(patch(BASE_URL + "/toggle").param("id", CLIENT_ID.toString()))
                 .andExpect(status().is3xxRedirection());
 
         verify(clientService).toggleClientBlockById(CLIENT_ID);
@@ -129,7 +132,7 @@ class ClientControllerTest {
     void testDeleteClient() throws Exception {
         doNothing().when(clientService).deleteClientById(CLIENT_ID);
 
-        mockMvc.perform(post(BASE_URL + "/delete").param("id", CLIENT_ID.toString()))
+        mockMvc.perform(delete(BASE_URL + "/delete").param("id", CLIENT_ID.toString()))
                 .andExpect(status().is3xxRedirection());
 
         verify(clientService).deleteClientById(CLIENT_ID);
@@ -143,6 +146,7 @@ class ClientControllerTest {
         client.setEmail("john.doe@example.com");
         client.setPassword("password");
         client.setShippingAddress("123 Main St");
+
         return client;
     }
 }

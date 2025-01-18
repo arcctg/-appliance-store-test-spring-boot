@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,6 @@ public class ApplianceController {
     @GetMapping
     public String getAllAppliances(Model model, @PageableDefault(size = 5, sort = "id") Pageable pageable) {
         model.addAttribute("appliances", applianceService.getAllAppliances(pageable));
-        model.addAttribute("pageable", pageable);
 
         return "appliance/appliances";
     }
@@ -31,17 +31,14 @@ public class ApplianceController {
     @Loggable
     @GetMapping("/add")
     public String addApplianceForm(Model model) {
-        model.addAttribute("appliance", new Appliance());
-        model.addAttribute("categories", applianceService.getCategories());
-        model.addAttribute("manufacturers", applianceService.getManufacturers());
-        model.addAttribute("powerTypes", applianceService.getPowerTypes());
+        fillModelAttributes(model, new Appliance());
 
         return "appliance/newAppliance";
     }
 
     @Loggable
     @PostMapping({"/add-appliance", "/edit-appliance"})
-    public String addAppliance(@ModelAttribute Appliance appliance) {
+    public String addAppliance(@ModelAttribute @Valid Appliance appliance) {
         applianceService.saveAppliance(appliance);
         return "redirect:/appliances";
     }
@@ -50,18 +47,24 @@ public class ApplianceController {
     @GetMapping("/edit")
     public String editApplianceForm(@RequestParam("id") Long id, Model model) {
         Appliance appliance = applianceService.getApplianceById(id);
-        model.addAttribute("appliance", appliance);
-        model.addAttribute("categories", applianceService.getCategories());
-        model.addAttribute("manufacturers", applianceService.getManufacturers());
-        model.addAttribute("powerTypes", applianceService.getPowerTypes());
+        fillModelAttributes(model, appliance);
+
         return "appliance/editAppliance";
     }
 
     @Loggable
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteAppliance(@RequestParam("id") Long id, HttpServletRequest request) {
         applianceService.deleteApplianceById(id);
+
         return "redirect:" + request.getHeader("Referer");
+    }
+
+    private void fillModelAttributes(Model model, Appliance appliance) {
+        model.addAttribute("appliance", appliance);
+        model.addAttribute("categories", applianceService.getCategories());
+        model.addAttribute("manufacturers", applianceService.getManufacturers());
+        model.addAttribute("powerTypes", applianceService.getPowerTypes());
     }
 }
 

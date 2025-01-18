@@ -20,7 +20,7 @@ public class CatalogController {
 
     @Loggable
     @GetMapping
-    public String catalog(Model model, @PageableDefault(size = 9) Pageable pageable) {
+    public String catalog(@PageableDefault(size = 9) Pageable pageable, Model model) {
         model.addAttribute("appliances", applianceService.getAllAppliances(pageable));
 
         return "catalog/catalog";

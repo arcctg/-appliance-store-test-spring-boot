@@ -3,6 +3,7 @@ package com.epam.rd.autocode.assessment.appliances.controller.web;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -62,7 +63,7 @@ class ManufacturerControllerTest {
         mockMvc.perform(get("/manufacturers"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("manufacture/manufacturers"))
-                .andExpect(model().attributeExists("pageable"));
+                .andExpect(model().attributeExists("manufacturers"));
 
         verify(manufacturerService, times(1)).getAllManufacturers(pageable);
     }
@@ -103,7 +104,7 @@ class ManufacturerControllerTest {
 
     @Test
     void testDeleteManufacturer() throws Exception {
-        mockMvc.perform(get("/manufacturers/delete").param("id", "1").header("Referer", "/manufacturers"))
+        mockMvc.perform(delete("/manufacturers/delete").param("id", "1").header("Referer", "/manufacturers"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/manufacturers"));
 

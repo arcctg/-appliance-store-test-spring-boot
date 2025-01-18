@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -34,21 +35,21 @@ public class RestClientController {
 
     @Loggable
     @PutMapping("/{id}")
-    public ResponseEntity<Client> editClient(@PathVariable Long id, @RequestBody @Valid Client client) {
+    public ResponseEntity<Client> editClient(@PathVariable @Min(1) Long id, @RequestBody @Valid Client client) {
         client.setId(id);
         return ResponseEntity.ok(clientService.updateClient(client));
     }
 
     @Loggable
     @PatchMapping("/{id}/toggle")
-    public ResponseEntity<Void> toggleClient(@PathVariable Long id) {
+    public ResponseEntity<Void> toggleClient(@PathVariable @Min(1) Long id) {
         clientService.toggleClientBlockById(id);
         return ResponseEntity.noContent().build();
     }
 
     @Loggable
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClient(@PathVariable @Min(1) Long id) {
         clientService.deleteClientById(id);
         return ResponseEntity.noContent().build();
     }

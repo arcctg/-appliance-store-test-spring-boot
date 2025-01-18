@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,8 @@ public class EmployeeController {
 
     @Loggable
     @GetMapping
-    public String getAllEmployees(
-            Model model,
-            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+    public String getAllEmployees(@PageableDefault(size = 5, sort = "id") Pageable pageable, Model model) {
         model.addAttribute("employees", employeeService.getAllEmployees(pageable));
-        model.addAttribute("pageable", pageable);
 
         return "employee/employees";
     }
@@ -46,13 +44,13 @@ public class EmployeeController {
 
     @Loggable
     @PostMapping({"/add-employee", "/edit-employee"})
-    public String saveEmployee(@ModelAttribute Employee employee) {
+    public String saveEmployee(@ModelAttribute @Valid Employee employee) {
         employeeService.saveEmployee(employee);
         return "redirect:/employees";
     }
 
     @Loggable
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteEmployee(@RequestParam("id") Long id, HttpServletRequest request) {
         employeeService.deleteEmployeeById(id);
         return "redirect:" + request.getHeader("Referer");

@@ -17,8 +17,8 @@ import java.util.Map;
 public class RestAuthController {
 
     @Loggable
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody AuthenticationRequest form,
+    @GetMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationRequest form,
                                         HttpServletRequest request) {
         try {
             request.login(form.getUsername(), form.getPassword());

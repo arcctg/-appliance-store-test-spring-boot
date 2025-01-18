@@ -3,6 +3,8 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Cart;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +25,21 @@ public class RestCartController {
 
     @Loggable
     @PostMapping("/add-item/{id}")
-    public ResponseEntity<String> addItemToCart(@PathVariable Long id, @RequestParam Long number) {
+    public ResponseEntity<String> addItemToCart(@PathVariable @Min(1) Long id, @RequestParam @Min(1) Long number) {
         cartService.addItemToCart(id, number);
         return ResponseEntity.ok("Item added to cart");
     }
 
     @Loggable
-    @PostMapping("/edit-item/{id}")
-    public ResponseEntity<String> editItemInCart(@PathVariable Long id, @RequestParam Long number) {
+    @PatchMapping("/edit-item/{id}")
+    public ResponseEntity<String> editItemInCart(@PathVariable @Min(1) Long id, @RequestParam @Min(1) Long number) {
         cartService.editItemInCart(id, number);
         return ResponseEntity.ok("Item edited in cart");
     }
 
     @Loggable
     @DeleteMapping("/delete-item/{id}")
-    public ResponseEntity<Void> deleteItemFromCart(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItemFromCart(@PathVariable @Min(1) Long id) {
         cartService.deleteItemFromCart(id);
         return ResponseEntity.noContent().build();
     }

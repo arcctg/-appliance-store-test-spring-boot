@@ -3,6 +3,7 @@ package com.epam.rd.autocode.assessment.appliances.model;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +29,9 @@ public class Client extends CustomUser {
     /**
      * Indicates whether the client is enabled.
      * Default value is true.
+     * Cannot be null.
      */
+    @NotNull(message = "Enabled status cannot be null")
     private Boolean enabled = true;
 
     /**

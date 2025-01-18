@@ -11,7 +11,7 @@
 <div class="container mt-5">
     <h1 th:text="#{object.client.edit}"></h1>
     <form th:action="@{edit-client}" th:object="${client}" onsubmit="return validatePasswords()"
-          method="post">
+          th:method="put">
         <input th:field="*{id}" type="hidden"/>
         <div class="mb-3">
             <label for="name" th:text="#{object.user.name}"/>

@@ -9,9 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/clients")
 public class ClientController {
+    /**
+     * The client service for managing client operations.
+     */
     private final ClientService clientService;
+
+    /**
+     * The redirect URL for clients.
+     */
+    private static final String REDIRECT_CLIENTS = "redirect:/clients";
 
     /**
      * Constructs a new ClientController with the specified ClientService.
@@ -43,6 +54,7 @@ public class ClientController {
     @GetMapping
     public String getAllClients(@PageableDefault(size = 5, sort = "id") Pageable pageable, Model model) {
         model.addAttribute("clients", clientService.getAllClients(pageable));
+
         return "client/clients";
     }
 
@@ -56,6 +68,7 @@ public class ClientController {
     @GetMapping("/add")
     public String addClientForm(Model model) {
         model.addAttribute("client", new Client());
+
         return "client/newClient";
     }
 
@@ -70,6 +83,7 @@ public class ClientController {
     @GetMapping("/edit")
     public String editClientForm(@RequestParam("id") Long id, Model model) {
         model.addAttribute("client", clientService.getClientById(id));
+
         return "client/editClient";
     }
 
@@ -80,10 +94,11 @@ public class ClientController {
      * @return the redirect URL after updating the client
      */
     @Loggable
-    @PostMapping("/edit-client")
+    @PutMapping("/edit-client")
     public String updateClient(@ModelAttribute @Valid Client client) {
         clientService.updateClient(client);
-        return "redirect:/clients";
+
+        return REDIRECT_CLIENTS;
     }
 
     /**
@@ -96,7 +111,8 @@ public class ClientController {
     @PostMapping("/add-client")
     public String addClient(@ModelAttribute @Valid Client client) {
         clientService.addClient(client);
-        return "redirect:/clients";
+
+        return REDIRECT_CLIENTS;
     }
 
     /**
@@ -107,9 +123,10 @@ public class ClientController {
      * @return the redirect URL after toggling the client enabled status
      */
     @Loggable
-    @PostMapping("/toggle")
+    @PatchMapping("/toggle")
     public String editClientForm(@RequestParam("id") Long id, HttpServletRequest request) {
         clientService.toggleClientBlockById(id);
+
         return redirectToReferer(request);
     }
 
@@ -121,9 +138,10 @@ public class ClientController {
      * @return the redirect URL after deleting the client
      */
     @Loggable
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteClient(@RequestParam("id") Long id, HttpServletRequest request) {
         clientService.deleteClientById(id);
+
         return redirectToReferer(request);
     }
 
@@ -135,6 +153,7 @@ public class ClientController {
      */
     private String redirectToReferer(HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        return referer != null ? "redirect:" + referer : "redirect:/clients";
+
+        return referer != null ? "redirect:" + referer : REDIRECT_CLIENTS;
     }
 }

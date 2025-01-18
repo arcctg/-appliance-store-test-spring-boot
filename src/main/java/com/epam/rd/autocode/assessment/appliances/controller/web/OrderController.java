@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,17 +25,14 @@ public class OrderController {
 
     @Loggable
     @GetMapping
-    public String getAllOrders(
-            Model model,
-            @PageableDefault(size = 5, sort = "id") Pageable pageable) {
+    public String getAllOrders(@PageableDefault(size = 5, sort = "id") Pageable pageable, Model model) {
         model.addAttribute("orders", orderService.getAllOrders(pageable));
-        model.addAttribute("pageable", pageable);
 
         return "order/order";
     }
 
     @Loggable
-    @GetMapping("/create")
+    @PostMapping("/create")
     public String addOrder() {
         orderService.createOrder();
 
@@ -42,20 +40,25 @@ public class OrderController {
     }
 
     @Loggable
-    @GetMapping("/cancel")
+    @PatchMapping("/cancel")
     public String cancelOrder(@RequestParam("id") Long id, HttpServletRequest request) {
         orderService.updateStatusById(id, Status.CANCELLED);
-        return "redirect:" + request.getHeader("Referer");
+
+        return redirectToReferer(request);
     }
 
     @Loggable
-    @PostMapping("/update-status")
-    public String updateStatus(HttpServletRequest request,
-                               @RequestParam("id") Long id,
-                               @RequestParam("status") Status status) {
+    @PatchMapping("/update-status")
+    public String updateStatus(
+            @RequestParam("id") Long id, @RequestParam("status") Status status, HttpServletRequest request) {
         orderService.updateStatusById(id, status);
 
-        return "redirect:" + request.getHeader("Referer");
+        return redirectToReferer(request);
     }
 
+    private String redirectToReferer(HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+
+        return referer != null ? "redirect:" + referer : "redirect:/orders";
+    }
 }

@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,6 +30,7 @@ public class Appliance {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Please provide the category")
     private Category category;
 
     @NotEmpty(message = "Please provide the model")
@@ -37,9 +39,11 @@ public class Appliance {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull(message = "Please provide the manufacturer")
     private Manufacturer manufacturer;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Please provide the power type")
     private PowerType powerType;
 
     @NotEmpty(message = "Please provide the characteristic")
@@ -49,6 +53,8 @@ public class Appliance {
     @Size(max = 1000, message = "Description cannot be longer than 1000 characters")
     private String description;
 
+    @NotNull(message = "Please provide the power")
+    @Min(value = 1, message = "Power must be at least 1")
     private Integer power;
 
     @NotNull(message = "Please provide the price")

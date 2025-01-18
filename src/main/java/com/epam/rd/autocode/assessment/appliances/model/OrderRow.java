@@ -32,13 +32,14 @@ public class OrderRow {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull(message = "Appliance cannot be null")
     private Appliance appliance;
 
     @NotNull
-    @Min(1)
+    @Min(value = 1, message = "Number must be at least 1")
     private Long number;
 
     @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
     private BigDecimal amount;
 }

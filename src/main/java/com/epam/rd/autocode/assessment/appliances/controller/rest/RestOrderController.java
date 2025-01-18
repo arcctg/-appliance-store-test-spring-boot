@@ -4,6 +4,7 @@ import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Order;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Status;
 import com.epam.rd.autocode.assessment.appliances.service.OrderService;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -33,15 +34,15 @@ public class RestOrderController {
     }
 
     @Loggable
-    @PostMapping("/cancel")
-    public ResponseEntity<Void> cancelOrder(@RequestParam("id") Long id) {
+    @PatchMapping("/cancel")
+    public ResponseEntity<Void> cancelOrder(@RequestParam("id") @Min(1) Long id) {
         orderService.updateStatusById(id, Status.CANCELLED);
         return ResponseEntity.ok().build();
     }
 
     @Loggable
-    @PostMapping("/update-status")
-    public ResponseEntity<Void> updateStatus(@RequestParam("id") Long id, @RequestParam("status") Status status) {
+    @PatchMapping("/update-status")
+    public ResponseEntity<Void> updateStatus(@RequestParam("id") @Min(1) Long id, @RequestParam("status") Status status) {
         orderService.updateStatusById(id, status);
         return ResponseEntity.ok().build();
     }

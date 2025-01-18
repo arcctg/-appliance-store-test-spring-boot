@@ -4,6 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -61,14 +62,14 @@ class OrderControllerTest {
         mockMvc.perform(get("/orders"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("order/order"))
-                .andExpect(model().attributeExists("pageable"));
+                .andExpect(model().attributeExists("orders"));
 
         verify(orderService, times(1)).getAllOrders(pageable);
     }
 
     @Test
     void testAddOrder() throws Exception {
-        mockMvc.perform(get("/orders/create"))
+        mockMvc.perform(post("/orders/create"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/orders"));
 
@@ -77,7 +78,7 @@ class OrderControllerTest {
 
     @Test
     void testCancelOrder() throws Exception {
-        mockMvc.perform(get("/orders/cancel")
+        mockMvc.perform(patch("/orders/cancel")
                         .param("id", "1")
                         .header("Referer", "/orders"))
                 .andExpect(status().is3xxRedirection())
@@ -88,7 +89,7 @@ class OrderControllerTest {
 
     @Test
     void testUpdateStatus() throws Exception {
-        mockMvc.perform(post("/orders/update-status")
+        mockMvc.perform(patch("/orders/update-status")
                         .param("id", "1")
                         .param("status", "DELIVERED")
                         .header("Referer", "/orders"))

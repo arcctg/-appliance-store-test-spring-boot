@@ -3,6 +3,8 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,27 +29,27 @@ public class RestEmployeeController {
 
     @Loggable
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @Loggable
     @PostMapping
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> addEmployee(@RequestBody @Valid Employee employee) {
         return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
 
     @Loggable
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> editEmployee(@PathVariable Long id,
-                                                 @RequestBody Employee employee) {
+    public ResponseEntity<Employee> editEmployee(@PathVariable @Min(1) Long id,
+                                                 @RequestBody @Valid Employee employee) {
         employee.setId(id);
         return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
 
     @Loggable
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable @Min(1) Long id) {
         employeeService.deleteEmployeeById(id);
         return ResponseEntity.noContent().build();
     }

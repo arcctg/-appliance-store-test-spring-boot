@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -13,10 +14,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
+import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,9 +57,7 @@ class ApplianceControllerTest {
 
     @Test
     void testGetAllAppliances() throws Exception {
-        Appliance appliance = new Appliance();
-        appliance.setId(APPLIANCE_ID);
-        appliance.setName("Test Appliance");
+        Appliance appliance = createTestAppliance();
         Page<Appliance> page = new PageImpl<>(List.of(appliance));
 
         when(applianceService.getAllAppliances(any(Pageable.class))).thenReturn(page);
@@ -64,7 +65,7 @@ class ApplianceControllerTest {
         mockMvc.perform(get(BASE_URL).param("page", "0").param("size", "10"))
             .andExpect(status().isOk())
             .andExpect(view().name("appliance/appliances"))
-            .andExpect(model().attributeExists("appliances", "pageable"))
+            .andExpect(model().attributeExists("appliances"))
             .andExpect(model().attribute("appliances", page));
 
         verify(applianceService, times(1)).getAllAppliances(any(Pageable.class));
@@ -91,21 +92,20 @@ class ApplianceControllerTest {
 
     @Test
     void testAddAppliance() throws Exception {
-        mockMvc.perform(post(BASE_URL + "/add-appliance")
-                .param("name", "Test Appliance")
-                .param("category", "BIG"))
+        Appliance appliance = createTestAppliance();
+        when(applianceService.saveAppliance(appliance)).thenReturn(appliance);
+
+        mockMvc.perform(post(BASE_URL + "/add-appliance").flashAttr("appliance", appliance))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(BASE_URL));
 
-        verify(applianceService, times(1)).saveAppliance(any(Appliance.class));
+        verify(applianceService).saveAppliance(appliance);
         verifyNoMoreInteractions(applianceService);
     }
 
     @Test
     void testEditApplianceForm() throws Exception {
-        Appliance appliance = new Appliance();
-        appliance.setId(APPLIANCE_ID);
-        appliance.setName("Test Appliance");
+        Appliance appliance = createTestAppliance();
 
         when(applianceService.getApplianceById(APPLIANCE_ID)).thenReturn(appliance);
         when(applianceService.getCategories()).thenReturn(Category.values());
@@ -124,7 +124,7 @@ class ApplianceControllerTest {
 
     @Test
     void testDeleteAppliance() throws Exception {
-        mockMvc.perform(get(BASE_URL + "/delete")
+        mockMvc.perform(delete(BASE_URL + "/delete")
                 .param("id", APPLIANCE_ID.toString())
                 .header("Referer", BASE_URL))
             .andExpect(status().is3xxRedirection())
@@ -132,5 +132,21 @@ class ApplianceControllerTest {
 
         verify(applianceService, times(1)).deleteApplianceById(APPLIANCE_ID);
         verifyNoMoreInteractions(applianceService);
+    }
+
+    private Appliance createTestAppliance() {
+        Appliance appliance = new Appliance();
+        appliance.setId(APPLIANCE_ID);
+        appliance.setName("Test Appliance");
+        appliance.setCategory(Category.BIG);
+        appliance.setManufacturer(new Manufacturer());
+        appliance.setPowerType(PowerType.AC110);
+        appliance.setDescription("Test Description");
+        appliance.setPrice(BigDecimal.valueOf(1));
+        appliance.setCharacteristic("Test Characteristic");
+        appliance.setModel("Test Model");
+        appliance.setPower(500);
+
+        return appliance;
     }
 }

@@ -3,7 +3,9 @@ package com.epam.rd.autocode.assessment.appliances.controller.web;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,7 +67,7 @@ class CartControllerTest {
 
     @Test
     void testEditItemInCart() throws Exception {
-        mockMvc.perform(post(BASE_URL + "/edit-item")
+        mockMvc.perform(patch(BASE_URL + "/edit-item")
                 .param("orderId", ORDER_ID.toString())
                 .param("number", NUMBER_THREE.toString()))
             .andExpect(status().is3xxRedirection())
@@ -77,7 +79,7 @@ class CartControllerTest {
 
     @Test
     void testDeleteItemFromCart() throws Exception {
-        mockMvc.perform(get(BASE_URL + "/delete-item")
+        mockMvc.perform(delete(BASE_URL + "/delete-item")
                 .param("orderId", ORDER_ID.toString()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(BASE_URL));

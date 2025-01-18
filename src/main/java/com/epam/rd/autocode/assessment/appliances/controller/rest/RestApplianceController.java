@@ -3,6 +3,8 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,27 +29,26 @@ public class RestApplianceController {
 
     @Loggable
     @GetMapping("/{id}")
-    public ResponseEntity<Appliance> getApplianceById(@PathVariable Long id) {
+    public ResponseEntity<Appliance> getApplianceById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.ok(applianceService.getApplianceById(id));
     }
 
     @Loggable
     @PostMapping
-    public ResponseEntity<Appliance> addAppliance(@RequestBody Appliance appliance) {
+    public ResponseEntity<Appliance> addAppliance(@RequestBody @Valid Appliance appliance) {
         return ResponseEntity.ok(applianceService.saveAppliance(appliance));
     }
 
     @Loggable
     @PutMapping("/{id}")
-    public ResponseEntity<Appliance> editAppliance(@PathVariable Long id,
-                                                   @RequestBody Appliance appliance) {
+    public ResponseEntity<Appliance> editAppliance(@PathVariable @Min(1) Long id, @RequestBody @Valid Appliance appliance) {
         appliance.setId(id);
         return ResponseEntity.ok(applianceService.saveAppliance(appliance));
     }
 
     @Loggable
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppliance(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAppliance(@PathVariable @Min(1) Long id) {
         applianceService.deleteApplianceById(id);
         return ResponseEntity.noContent().build();
     }

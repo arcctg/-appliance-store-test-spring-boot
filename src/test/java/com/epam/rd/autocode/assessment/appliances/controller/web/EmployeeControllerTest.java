@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -60,7 +61,7 @@ class EmployeeControllerTest {
         mockMvc.perform(get(BASE_URL))
             .andExpect(status().isOk())
             .andExpect(view().name("employee/employees"))
-            .andExpect(model().attributeExists("employees", "pageable"));
+            .andExpect(model().attributeExists("employees"));
 
         verify(employeeService).getAllEmployees(any(Pageable.class));
         verifyNoMoreInteractions(employeeService);
@@ -76,7 +77,7 @@ class EmployeeControllerTest {
 
     @Test
     void testEditEmployeeForm() throws Exception {
-        Employee mockEmployee = new Employee();
+        Employee mockEmployee = createTestEmployee();
         when(employeeService.getEmployeeById(EMPLOYEE_ID)).thenReturn(mockEmployee);
 
         mockMvc.perform(get(BASE_URL + "/edit").param("id", EMPLOYEE_ID.toString()))
@@ -91,7 +92,8 @@ class EmployeeControllerTest {
 
     @Test
     void testSaveEmployee() throws Exception {
-        Employee mockEmployee = new Employee();
+        Employee mockEmployee = createTestEmployee();
+        when(employeeService.saveEmployee(mockEmployee)).thenReturn(mockEmployee);
 
         mockMvc.perform(post(BASE_URL + "/add-employee").flashAttr("employee", mockEmployee))
                 .andExpect(status().is3xxRedirection())
@@ -105,10 +107,21 @@ class EmployeeControllerTest {
     void testDeleteEmployee() throws Exception {
         doNothing().when(employeeService).deleteEmployeeById(EMPLOYEE_ID);
 
-        mockMvc.perform(get(BASE_URL + "/delete").param("id", EMPLOYEE_ID.toString()))
+        mockMvc.perform(delete(BASE_URL + "/delete").param("id", EMPLOYEE_ID.toString()))
             .andExpect(status().is3xxRedirection());
 
         verify(employeeService).deleteEmployeeById(EMPLOYEE_ID);
         verifyNoMoreInteractions(employeeService);
+    }
+
+    private Employee createTestEmployee() {
+        Employee employee = new Employee();
+        employee.setId(EMPLOYEE_ID);
+        employee.setName("Test Employee");
+        employee.setEmail("test@email.com");
+        employee.setPassword("password");
+        employee.setDepartment("Test Department");
+
+        return employee;
     }
 }
