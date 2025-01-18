@@ -63,7 +63,7 @@
                 </tr>
                 </tbody>
             </table>
-            <h4 th:text="'Total: ' + ${cart.getTotal()} + '$'"></h4>
+            <h4 th:text="#{object.order.total} + ': ' + ${cart.getTotal()} + '$'"></h4>
             <a class="btn btn-primary mb-3" th:href="@{orders/create}"
                th:text="#{object.orders.new}"/>
         </div>
