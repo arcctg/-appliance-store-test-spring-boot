@@ -10,7 +10,8 @@
 <div th:insert="~{menunavy::navy}"></div>
 <div class="container mt-5">
     <h1 th:text="#{object.client.edit}"></h1>
-    <form th:action="@{edit-client}" th:object="${client}" method="post">
+    <form th:action="@{edit-client}" th:object="${client}" onsubmit="return validatePasswords()"
+          method="post">
         <input th:field="*{id}" type="hidden"/>
         <div class="mb-3">
             <label for="name" th:text="#{object.user.name}"/>
@@ -22,11 +23,17 @@
         </div>
         <div class="mb-3">
             <label for="password" th:text="#{object.user.password}"/>
-            <input class="form-control" id="password" required th:field="*{password}" type="text"/>
+            <input class="form-control" id="password" required th:field="*{password}" type="password"
+                   minlength="3"/>
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" th:text="#{object.user.confirmPassword}"/>
+            <input class="form-control" id="confirmPassword" required type="password"/>
         </div>
         <div class="mb-3">
             <label for="shippingAddress" th:text="#{object.client.shippingAddress}"/>
-            <input class="form-control" id="shippingAddress" required th:field="*{shippingAddress}" type="text"/>
+            <input class="form-control" id="shippingAddress" required th:field="*{shippingAddress}"
+                   type="text"/>
         </div>
         <div class="mb-3">
             <label for="enabled" th:text="#{object.client.enabled}"/>
@@ -39,5 +46,16 @@
     </form>
 </div>
 <div th:insert="~{footer::footer}"></div>
+<script>
+    function validatePasswords() {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

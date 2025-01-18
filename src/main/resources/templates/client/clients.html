@@ -9,7 +9,7 @@
 </head>
 <body>
 <div th:insert="~{menunavy::navy}"></div>
-<div class="container mt-5" th:with="sort=${pageable.getSort().toString().replace(': ', ',')}, asc=${sort.contains('ASC')},
+<div class="container mt-5" th:with="sort=${clients.getSort().toString().replace(': ', ',')}, asc=${sort.contains('ASC')},
  icon=${asc ? 'fa-sort-asc' : 'fa-sort-desc'}, order=${asc ? 'DESC' : 'ASC'}, faSort='fa-sort'">
     <h1 th:text="#{client.header.list}"></h1>
     <table class="table table-bordered">
@@ -56,14 +56,19 @@
             <td th:text="${client.shippingAddress}"/>
             <td th:text="${client.enabled}"/>
             <td>
-                <a class="btn btn-warning btn-sm" th:href="@{/clients/toggle(id=${client.id})}"
-                   th:text="${client.enabled} ? #{btn.lock} : #{btn.unlock}"/>
+                <form th:action="@{/clients/toggle}" method="post">
+                    <input type="hidden" name="id" th:value="${client.id}"/>
+                    <button type="submit" class="btn btn-warning btn-sm"
+                            th:text="${client.enabled} ? #{btn.lock} : #{btn.unlock}"></button>
+                </form>
                 <div class="d-inline" sec:authorize="hasRole('ADMIN')">
                     <a class="btn btn-warning btn-sm" th:href="@{/clients/edit(id=${client.id})}"
                        th:text="#{btn.edit}"/>
-                    <a class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure you want to delete this object?');"
-                       th:href="@{/clients/delete(id=${client.id})}" th:text="#{btn.delete}"/>
+                    <form th:action="@{/clients/delete}" method="post"
+                          onsubmit="return confirm('Are you sure you want to delete this object?');">
+                        <input type="hidden" name="id" th:value="${client.id}"/>
+                        <button type="submit" class="btn btn-danger btn-sm" th:text="#{btn.delete}"></button>
+                    </form>
                 </div>
             </td>
         </tr>
