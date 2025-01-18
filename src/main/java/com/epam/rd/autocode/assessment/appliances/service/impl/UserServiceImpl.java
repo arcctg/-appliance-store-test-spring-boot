@@ -29,4 +29,11 @@ public class UserServiceImpl implements UserService {
                 .or(() -> adminRepository.findByEmail(email))
                 .orElseThrow(() -> new UsernameNotFoundException(email));
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return clientRepository.existsByEmail(email)
+                || employeeRepository.existsByEmail(email)
+                || adminRepository.existsByEmail(email);
+    }
 }

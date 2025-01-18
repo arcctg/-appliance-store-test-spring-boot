@@ -8,9 +8,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,9 +30,10 @@ public class SecurityConfig {
             "/swagger-resources"
     };
     private static final String[] PUBLIC_WHITELIST = {
-            "/", "/api", "/api/index",
+            "/", "/index", "/api", "/api/index",
             "/catalog", "/api/catalog",
             "/cart/**", "/api/cart/**", "/api/cart",
+            "/register", "/new-user",
             "/api/auth/**",
             "/api/localization"
     };
@@ -63,7 +66,7 @@ public class SecurityConfig {
                         .requestMatchers(ADMIN_WHITELIST).hasRole(ADMIN)
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form.permitAll())
+                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
