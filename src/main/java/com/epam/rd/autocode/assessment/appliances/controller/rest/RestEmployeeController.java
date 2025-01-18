@@ -36,7 +36,7 @@ public class RestEmployeeController {
     @Loggable
     @PostMapping
     public ResponseEntity<Employee> addEmployee(@RequestBody @Valid Employee employee) {
-        return ResponseEntity.ok(employeeService.saveEmployee(employee));
+        return ResponseEntity.ok(employeeService.addEmployee(employee));
     }
 
     @Loggable
@@ -44,7 +44,7 @@ public class RestEmployeeController {
     public ResponseEntity<Employee> editEmployee(@PathVariable @Min(1) Long id,
                                                  @RequestBody @Valid Employee employee) {
         employee.setId(id);
-        return ResponseEntity.ok(employeeService.saveEmployee(employee));
+        return ResponseEntity.ok(employeeService.updateEmployee(employee));
     }
 
     @Loggable

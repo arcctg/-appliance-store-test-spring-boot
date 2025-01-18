@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,15 +92,28 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void testSaveEmployee() throws Exception {
+    void testUpdateEmployee() throws Exception {
         Employee mockEmployee = createTestEmployee();
-        when(employeeService.saveEmployee(mockEmployee)).thenReturn(mockEmployee);
+        when(employeeService.updateEmployee(mockEmployee)).thenReturn(mockEmployee);
 
-        mockMvc.perform(post(BASE_URL + "/add-employee").flashAttr("employee", mockEmployee))
+        mockMvc.perform(put(BASE_URL + "/edit-employee").flashAttr("employee", mockEmployee))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(BASE_URL));
 
-        verify(employeeService).saveEmployee(mockEmployee);
+        verify(employeeService).updateEmployee(mockEmployee);
+        verifyNoMoreInteractions(employeeService);
+    }
+
+    @Test
+    void testAddEmployee() throws Exception {
+        Employee mockEmployee = createTestEmployee();
+        when(employeeService.addEmployee(mockEmployee)).thenReturn(mockEmployee);
+
+        mockMvc.perform(post(BASE_URL + "/add-employee").flashAttr("employee", mockEmployee))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(BASE_URL));
+
+        verify(employeeService).addEmployee(mockEmployee);
         verifyNoMoreInteractions(employeeService);
     }
 

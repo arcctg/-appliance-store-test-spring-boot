@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private static final String REDIRECT_EMPLOYEES = "redirect:/employees";
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -32,6 +33,7 @@ public class EmployeeController {
     @GetMapping("/add")
     public String addEmployeeForm(Model model) {
         model.addAttribute("employee", new Employee());
+
         return "employee/newEmployee";
     }
 
@@ -39,20 +41,37 @@ public class EmployeeController {
     @GetMapping("/edit")
     public String editEmployeeForm(@RequestParam("id") Long id, Model model) {
         model.addAttribute("employee", employeeService.getEmployeeById(id));
+
         return "employee/editEmployee";
     }
 
     @Loggable
-    @PostMapping({"/add-employee", "/edit-employee"})
-    public String saveEmployee(@ModelAttribute @Valid Employee employee) {
-        employeeService.saveEmployee(employee);
-        return "redirect:/employees";
+    @PutMapping("/edit-employee")
+    public String updateEmployee(@ModelAttribute @Valid Employee employee) {
+        employeeService.updateEmployee(employee);
+
+        return REDIRECT_EMPLOYEES;
+    }
+
+    @Loggable
+    @PostMapping("/add-employee")
+    public String addEmployee(@ModelAttribute @Valid Employee employee) {
+        employeeService.addEmployee(employee);
+
+        return REDIRECT_EMPLOYEES;
     }
 
     @Loggable
     @DeleteMapping("/delete")
     public String deleteEmployee(@RequestParam("id") Long id, HttpServletRequest request) {
         employeeService.deleteEmployeeById(id);
-        return "redirect:" + request.getHeader("Referer");
+
+        return redirectToReferer(request);
+    }
+
+    private String redirectToReferer(HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+
+        return referer != null ? "redirect:" + referer : REDIRECT_EMPLOYEES;
     }
 }
