@@ -3,6 +3,7 @@ package com.epam.rd.autocode.assessment.appliances.controller.rest;
 import com.epam.rd.autocode.assessment.appliances.aspect.Loggable;
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,15 +28,15 @@ public class RestClientController {
 
     @Loggable
     @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody Client client) {
-        return ResponseEntity.ok(clientService.saveClient(client));
+    public ResponseEntity<Client> addClient(@RequestBody @Valid Client client) {
+        return ResponseEntity.ok(clientService.updateClient(client));
     }
 
     @Loggable
     @PutMapping("/{id}")
-    public ResponseEntity<Client> editClient(@PathVariable Long id, @RequestBody Client client) {
+    public ResponseEntity<Client> editClient(@PathVariable Long id, @RequestBody @Valid Client client) {
         client.setId(id);
-        return ResponseEntity.ok(clientService.saveClient(client));
+        return ResponseEntity.ok(clientService.updateClient(client));
     }
 
     @Loggable
