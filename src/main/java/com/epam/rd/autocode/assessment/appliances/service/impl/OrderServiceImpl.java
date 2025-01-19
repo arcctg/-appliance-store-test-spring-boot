@@ -71,6 +71,8 @@ public class OrderServiceImpl implements OrderService {
 
             if (user instanceof Employee employee) {
                 order.setEmployee(employee);
+            } else if (user instanceof Client client && !order.getClient().equals(client)) {
+                return;
             }
 
             order.setStatus(status);

@@ -43,7 +43,8 @@ public class SecurityConfig {
     private static final String[] EMPLOYEE_WHITELIST = {
             "/clients", "/clients/toggle",
             "/appliances", "/appliances/**", "/api/appliances", "/api/appliances/**",
-            "/manufacturers", "/manufacturers/**", "/api/manufacturers", "/api/manufacturers/**"
+            "/manufacturers", "/manufacturers/**", "/api/manufacturers", "/api/manufacturers/**",
+            "/orders/update-status", "/api/orders/update-status"
     };
     private static final String[] ADMIN_WHITELIST = {
             "/employees/**", "/api/employees/**",

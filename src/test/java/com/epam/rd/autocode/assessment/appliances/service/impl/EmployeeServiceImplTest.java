@@ -88,6 +88,8 @@ class EmployeeServiceImplTest {
 
     @Test
     void testDeleteEmployeeById() {
+        when(employeeRepository.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
+
         employeeService.deleteEmployeeById(EMPLOYEE_ID);
 
         verify(employeeRepository, times(1)).deleteById(EMPLOYEE_ID);
