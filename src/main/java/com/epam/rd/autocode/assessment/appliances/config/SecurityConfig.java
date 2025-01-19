@@ -63,8 +63,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_WHITELIST).permitAll()
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/clients").hasRole(EMPLOYEE)
-                        .requestMatchers(HttpMethod.PATCH, "/api/clients/**").hasRole(EMPLOYEE)
+                        .requestMatchers(HttpMethod.GET, "/api/clients").hasAnyRole(EMPLOYEE, ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/api/clients/**").hasAnyRole(EMPLOYEE, ADMIN)
                         .requestMatchers(EMPLOYEE_WHITELIST).hasAnyRole(EMPLOYEE, ADMIN)
                         .requestMatchers(ADMIN_WHITELIST).hasRole(ADMIN)
                         .anyRequest().authenticated()
