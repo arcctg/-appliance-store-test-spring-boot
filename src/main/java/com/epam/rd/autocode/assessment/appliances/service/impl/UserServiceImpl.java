@@ -14,9 +14,8 @@ public class UserServiceImpl implements UserService {
     private final EmployeeRepository employeeRepository;
     private final AdminRepository adminRepository;
 
-    public UserServiceImpl(ClientRepository clientRepository,
-                           EmployeeRepository employeeRepository,
-                           AdminRepository adminRepository) {
+    public UserServiceImpl(
+            ClientRepository clientRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository) {
         this.clientRepository = clientRepository;
         this.employeeRepository = employeeRepository;
         this.adminRepository = adminRepository;
@@ -24,7 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CustomUser findUserByEmail(String email) {
-        return clientRepository.findByEmail(email).map(c -> (CustomUser) c)
+        return clientRepository
+                .findByEmail(email)
+                .map(c -> (CustomUser) c)
                 .or(() -> employeeRepository.findByEmail(email))
                 .or(() -> adminRepository.findByEmail(email))
                 .orElseThrow(() -> new UsernameNotFoundException(email));

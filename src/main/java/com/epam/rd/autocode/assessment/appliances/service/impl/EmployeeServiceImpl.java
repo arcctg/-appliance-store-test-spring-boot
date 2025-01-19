@@ -4,7 +4,6 @@ import com.epam.rd.autocode.assessment.appliances.exception.EmployeeNotFoundExce
 import com.epam.rd.autocode.assessment.appliances.exception.UserAlreadyExistsException;
 import com.epam.rd.autocode.assessment.appliances.model.Employee;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
-import com.epam.rd.autocode.assessment.appliances.model.enums.Status;
 import com.epam.rd.autocode.assessment.appliances.repository.EmployeeRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.service.EmployeeService;
@@ -21,8 +20,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final OrderRepository orderRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, UserService userService,
-        BCryptPasswordEncoder passwordEncoder, OrderRepository orderRepository) {
+    public EmployeeServiceImpl(
+            EmployeeRepository employeeRepository,
+            UserService userService,
+            BCryptPasswordEncoder passwordEncoder,
+            OrderRepository orderRepository) {
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -32,10 +34,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee updateEmployee(Employee employee) {
         Employee existingEmployee = employeeRepository
-            .findById(employee.getId())
-            .orElseThrow(() -> new EmployeeNotFoundException(employee.getId()));
+                .findById(employee.getId())
+                .orElseThrow(() -> new EmployeeNotFoundException(employee.getId()));
 
-        if (!existingEmployee.getEmail().equals(employee.getEmail()) && userService.existsByEmail(employee.getEmail())) {
+        if (!existingEmployee.getEmail().equals(employee.getEmail())
+                && userService.existsByEmail(employee.getEmail())) {
             throw new UserAlreadyExistsException(employee.getEmail());
         }
 

@@ -1,16 +1,17 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.CATEGORY_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Category.ENUM_CONSTANT_BIG;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Category.ENUM_CONSTANT_SMALL;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Category.ENUM_COUNT_CONSTANTS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.CATEGORY_TYPE;
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Category.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class CategoryTest {
     private static List<?> constants;

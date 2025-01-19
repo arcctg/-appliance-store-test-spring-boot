@@ -7,14 +7,12 @@ import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.ClientService;
-import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /**
  * Implementation of the {@link ClientService} interface for managing clients.
@@ -35,7 +33,10 @@ public class ClientServiceImpl implements ClientService {
      * @param passwordEncoder the password encoder
      */
     public ClientServiceImpl(
-            ClientRepository clientRepository, UserService userService, CartService cartService, BCryptPasswordEncoder passwordEncoder) {
+            ClientRepository clientRepository,
+            UserService userService,
+            CartService cartService,
+            BCryptPasswordEncoder passwordEncoder) {
         this.clientRepository = clientRepository;
         this.userService = userService;
         this.cartService = cartService;

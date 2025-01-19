@@ -11,13 +11,10 @@ import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.ApplianceService;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
-import com.epam.rd.autocode.assessment.appliances.service.ClientService;
-import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,12 +34,13 @@ public class CartServiceImpl implements CartService {
     private final OrderRepository orderRepository;
 
     public CartServiceImpl(
-        CartRepository cartRepository,
-        ApplianceService applianceService,
-        OrderRowRepository orderRowRepository,
-        HttpServletRequest request,
-        HttpServletResponse response, ClientRepository clientRepository,
-        OrderRepository orderRepository) {
+            CartRepository cartRepository,
+            ApplianceService applianceService,
+            OrderRowRepository orderRowRepository,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            ClientRepository clientRepository,
+            OrderRepository orderRepository) {
         this.cartRepository = cartRepository;
         this.applianceService = applianceService;
         this.orderRowRepository = orderRowRepository;
@@ -57,13 +55,11 @@ public class CartServiceImpl implements CartService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth instanceof AnonymousAuthenticationToken) {
-            return cartRepository
-                .findById(getAnonymousCartId())
-                .orElseGet(() -> {
-                    Cart newCart = cartRepository.save(new Cart());
-                    setAnonymousCartId(newCart.getId());
-                    return newCart;
-                });
+            return cartRepository.findById(getAnonymousCartId()).orElseGet(() -> {
+                Cart newCart = cartRepository.save(new Cart());
+                setAnonymousCartId(newCart.getId());
+                return newCart;
+            });
         }
 
         return clientRepository
@@ -90,21 +86,21 @@ public class CartServiceImpl implements CartService {
         List<OrderRow> userOrderRowSet = userCart.getOrderRowList();
         for (OrderRow orderRow : anonymousCart.getOrderRowList()) {
             userOrderRowSet.stream()
-                .filter(o -> o.getAppliance()
-                    .getId()
-                    .equals(orderRow.getAppliance().getId()))
-                .findFirst()
-                .ifPresentOrElse(
-                    existingOrderRow -> {
-                        existingOrderRow.setNumber(existingOrderRow.getNumber() + orderRow.getNumber());
-                        existingOrderRow.setAmount(
-                            existingOrderRow.getAmount().add(orderRow.getAmount()));
-                        orderRowRepository.delete(orderRow);
-                    },
-                    () -> {
-                        orderRow.setCart(userCart);
-                        userOrderRowSet.add(orderRow);
-                    });
+                    .filter(o -> o.getAppliance()
+                            .getId()
+                            .equals(orderRow.getAppliance().getId()))
+                    .findFirst()
+                    .ifPresentOrElse(
+                            existingOrderRow -> {
+                                existingOrderRow.setNumber(existingOrderRow.getNumber() + orderRow.getNumber());
+                                existingOrderRow.setAmount(
+                                        existingOrderRow.getAmount().add(orderRow.getAmount()));
+                                orderRowRepository.delete(orderRow);
+                            },
+                            () -> {
+                                orderRow.setCart(userCart);
+                                userOrderRowSet.add(orderRow);
+                            });
         }
     }
 
@@ -114,22 +110,22 @@ public class CartServiceImpl implements CartService {
         Appliance appliance = applianceService.getApplianceById(applianceId);
 
         cart.getOrderRowList().stream()
-            .filter(orderRow -> orderRow.getAppliance().getId().equals(applianceId))
-            .findFirst()
-            .ifPresentOrElse(
-                orderRow -> {
-                    orderRow.setNumber(orderRow.getNumber() + number);
-                    orderRow.setAmount(
-                        BigDecimal.valueOf(orderRow.getNumber()).multiply(appliance.getPrice()));
-                },
-                () -> {
-                    OrderRow orderRow = new OrderRow();
-                    orderRow.setCart(cart);
-                    orderRow.setAppliance(appliance);
-                    orderRow.setNumber(number);
-                    orderRow.setAmount(BigDecimal.valueOf(number).multiply(appliance.getPrice()));
-                    cart.getOrderRowList().add(orderRowRepository.save(orderRow));
-                });
+                .filter(orderRow -> orderRow.getAppliance().getId().equals(applianceId))
+                .findFirst()
+                .ifPresentOrElse(
+                        orderRow -> {
+                            orderRow.setNumber(orderRow.getNumber() + number);
+                            orderRow.setAmount(
+                                    BigDecimal.valueOf(orderRow.getNumber()).multiply(appliance.getPrice()));
+                        },
+                        () -> {
+                            OrderRow orderRow = new OrderRow();
+                            orderRow.setCart(cart);
+                            orderRow.setAppliance(appliance);
+                            orderRow.setNumber(number);
+                            orderRow.setAmount(BigDecimal.valueOf(number).multiply(appliance.getPrice()));
+                            cart.getOrderRowList().add(orderRowRepository.save(orderRow));
+                        });
 
         cartRepository.save(cart);
     }
@@ -139,14 +135,14 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCurrentUserCart();
 
         cart.getOrderRowList().stream()
-            .filter(orderRow -> orderRow.getId().equals(orderId))
-            .findFirst()
-            .ifPresent(orderRow -> {
-                orderRow.setNumber(number);
-                orderRow.setAmount(BigDecimal.valueOf(number)
-                    .multiply(orderRow.getAppliance().getPrice()));
-                cartRepository.save(cart);
-            });
+                .filter(orderRow -> orderRow.getId().equals(orderId))
+                .findFirst()
+                .ifPresent(orderRow -> {
+                    orderRow.setNumber(number);
+                    orderRow.setAmount(BigDecimal.valueOf(number)
+                            .multiply(orderRow.getAppliance().getPrice()));
+                    cartRepository.save(cart);
+                });
     }
 
     @Override
@@ -176,7 +172,8 @@ public class CartServiceImpl implements CartService {
     private Long getAnonymousCartId() {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (CART_COOKIE_NAME.equals(cookie.getName()) && cookie.getValue().matches("\\d+")) {
+                if (CART_COOKIE_NAME.equals(cookie.getName())
+                        && cookie.getValue().matches("\\d+")) {
                     return Long.valueOf(cookie.getValue());
                 }
             }

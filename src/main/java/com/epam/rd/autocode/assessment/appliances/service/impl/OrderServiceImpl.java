@@ -1,20 +1,24 @@
 package com.epam.rd.autocode.assessment.appliances.service.impl;
 
-import com.epam.rd.autocode.assessment.appliances.model.*;
+import com.epam.rd.autocode.assessment.appliances.model.Cart;
+import com.epam.rd.autocode.assessment.appliances.model.Client;
+import com.epam.rd.autocode.assessment.appliances.model.CustomUser;
+import com.epam.rd.autocode.assessment.appliances.model.Employee;
+import com.epam.rd.autocode.assessment.appliances.model.Order;
+import com.epam.rd.autocode.assessment.appliances.model.OrderRow;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Status;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRepository;
 import com.epam.rd.autocode.assessment.appliances.repository.OrderRowRepository;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
 import com.epam.rd.autocode.assessment.appliances.service.OrderService;
 import com.epam.rd.autocode.assessment.appliances.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,7 +27,11 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final OrderRowRepository orderRowRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, CartService cartService, UserService userService, OrderRowRepository orderRowRepository) {
+    public OrderServiceImpl(
+            OrderRepository orderRepository,
+            CartService cartService,
+            UserService userService,
+            OrderRowRepository orderRowRepository) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userService = userService;

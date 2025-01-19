@@ -13,7 +13,6 @@ import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundExcept
 import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.repository.ClientRepository;
 import com.epam.rd.autocode.assessment.appliances.service.CartService;
-import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

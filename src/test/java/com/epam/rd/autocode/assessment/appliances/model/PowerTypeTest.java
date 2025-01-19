@@ -1,16 +1,18 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.POWER_TYPE_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.PowerType.ENUM_CONSTANT_AC110;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.PowerType.ENUM_CONSTANT_AC220;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.PowerType.ENUM_CONSTANT_ACCUMULATOR;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.PowerType.ENUM_COUNT_CONSTANTS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.POWER_TYPE_TYPE;
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.PowerType.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class PowerTypeTest {
     private static List<?> constants;

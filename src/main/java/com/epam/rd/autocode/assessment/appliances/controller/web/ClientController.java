@@ -25,14 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/clients")
 public class ClientController {
     /**
-     * The client service for managing client operations.
-     */
-    private final ClientService clientService;
-
-    /**
      * The redirect URL for clients.
      */
     private static final String REDIRECT_CLIENTS = "redirect:/clients";
+    /**
+     * The client service for managing client operations.
+     */
+    private final ClientService clientService;
 
     /**
      * Constructs a new ClientController with the specified ClientService.

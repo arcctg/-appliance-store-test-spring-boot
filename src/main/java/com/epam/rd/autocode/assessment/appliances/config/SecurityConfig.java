@@ -1,7 +1,6 @@
 package com.epam.rd.autocode.assessment.appliances.config;
 
 import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
-import com.epam.rd.autocode.assessment.appliances.service.UserService;
 import com.epam.rd.autocode.assessment.appliances.service.impl.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,20 +8,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final MyUserDetailService myUserDetailService;
     private static final String ADMIN = Role.ADMIN.name();
     private static final String EMPLOYEE = Role.EMPLOYEE.name();
     private static final String[] SWAGGER_WHITELIST = {
@@ -52,6 +48,7 @@ public class SecurityConfig {
             "/appliances/**", "/api/appliances/**",
             "/manufacturers/**", "/api/manufacturers/**"
     };
+    private final MyUserDetailService myUserDetailService;
 
     public SecurityConfig(MyUserDetailService myUserDetailService) {
         this.myUserDetailService = myUserDetailService;

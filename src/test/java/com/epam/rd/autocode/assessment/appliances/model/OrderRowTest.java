@@ -1,11 +1,10 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-import org.junit.jupiter.params.provider.CsvSource;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.LONG_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.ORDER_ROW_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.OrderRow.CLASS_COUNT_CONSTRUCTORS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,11 +12,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.*;
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.OrderRow.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class OrderRowTest {
     private static List<Field> allFields;

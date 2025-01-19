@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.epam.rd.autocode.assessment.appliances.model.Appliance;
-import com.epam.rd.autocode.assessment.appliances.model.Client;
 import com.epam.rd.autocode.assessment.appliances.model.Manufacturer;
 import com.epam.rd.autocode.assessment.appliances.model.enums.Category;
 import com.epam.rd.autocode.assessment.appliances.model.enums.PowerType;
@@ -51,8 +50,8 @@ class ApplianceControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(applianceController)
-            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-            .build();
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     @Test
@@ -63,10 +62,10 @@ class ApplianceControllerTest {
         when(applianceService.getAllAppliances(any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get(BASE_URL).param("page", "0").param("size", "10"))
-            .andExpect(status().isOk())
-            .andExpect(view().name("appliance/appliances"))
-            .andExpect(model().attributeExists("appliances"))
-            .andExpect(model().attribute("appliances", page));
+                .andExpect(status().isOk())
+                .andExpect(view().name("appliance/appliances"))
+                .andExpect(model().attributeExists("appliances"))
+                .andExpect(model().attribute("appliances", page));
 
         verify(applianceService, times(1)).getAllAppliances(any(Pageable.class));
         verifyNoMoreInteractions(applianceService);
@@ -79,10 +78,9 @@ class ApplianceControllerTest {
         when(applianceService.getPowerTypes()).thenReturn(PowerType.values());
 
         mockMvc.perform(get(BASE_URL + "/add"))
-            .andExpect(status().isOk())
-            .andExpect(view().name("appliance/newAppliance"))
-            .andExpect(
-                model().attributeExists("appliance", "categories", "manufacturers", "powerTypes"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("appliance/newAppliance"))
+                .andExpect(model().attributeExists("appliance", "categories", "manufacturers", "powerTypes"));
 
         verify(applianceService).getCategories();
         verify(applianceService).getManufacturers();
@@ -96,8 +94,8 @@ class ApplianceControllerTest {
         when(applianceService.saveAppliance(appliance)).thenReturn(appliance);
 
         mockMvc.perform(post(BASE_URL + "/add-appliance").flashAttr("appliance", appliance))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl(BASE_URL));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(BASE_URL));
 
         verify(applianceService).saveAppliance(appliance);
         verifyNoMoreInteractions(applianceService);
@@ -113,10 +111,9 @@ class ApplianceControllerTest {
         when(applianceService.getPowerTypes()).thenReturn(PowerType.values());
 
         mockMvc.perform(get(BASE_URL + "/edit").param("id", APPLIANCE_ID.toString()))
-            .andExpect(status().isOk())
-            .andExpect(view().name("appliance/editAppliance"))
-            .andExpect(
-                model().attributeExists("appliance", "categories", "manufacturers", "powerTypes"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("appliance/editAppliance"))
+                .andExpect(model().attributeExists("appliance", "categories", "manufacturers", "powerTypes"));
 
         verify(applianceService, times(1)).getApplianceById(APPLIANCE_ID);
         verifyNoMoreInteractions(applianceService);
@@ -125,10 +122,10 @@ class ApplianceControllerTest {
     @Test
     void testDeleteAppliance() throws Exception {
         mockMvc.perform(delete(BASE_URL + "/delete")
-                .param("id", APPLIANCE_ID.toString())
-                .header("Referer", BASE_URL))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl(BASE_URL));
+                        .param("id", APPLIANCE_ID.toString())
+                        .header("Referer", BASE_URL))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(BASE_URL));
 
         verify(applianceService, times(1)).deleteApplianceById(APPLIANCE_ID);
         verifyNoMoreInteractions(applianceService);

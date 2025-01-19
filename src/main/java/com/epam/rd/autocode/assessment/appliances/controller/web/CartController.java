@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-    private final CartService cartService;
     private static final String REDIRECT_CART = "redirect:/cart";
+    private final CartService cartService;
 
     public CartController(CartService cartService) {
         this.cartService = cartService;

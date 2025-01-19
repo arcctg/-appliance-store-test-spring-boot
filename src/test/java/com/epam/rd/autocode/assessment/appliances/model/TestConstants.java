@@ -10,11 +10,9 @@ public class TestConstants {
     public static final String CLIENT_TYPE = CLASS_PACKAGE + "." + Client.CLASS_NAME;
     public static final String EMPLOYEE_TYPE = CLASS_PACKAGE + "." + Employee.CLASS_NAME;
     public static final String ORDER_ROW_TYPE = CLASS_PACKAGE + "." + OrderRow.CLASS_NAME;
-    public static final String ORDERS_TYPE = CLASS_PACKAGE + "." + Orders.CLASS_NAME;
     public static final String LONG_TYPE = "java.lang.Long";
     public static final String INT_TYPE = "java.lang.Integer";
     public static final String STRING_TYPE = "java.lang.String";
-    public static final String BIG_DECIMAL_TYPE = "java.math.BigDecimal";
 
     static class Category {
         public static final String ENUM_NAME = "Category";
@@ -38,7 +36,6 @@ public class TestConstants {
         public static final String FIELD_NAME = "name";
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;
-
     }
 
     static class Appliance {
@@ -58,17 +55,14 @@ public class TestConstants {
     static class Client {
         public static final String CLASS_NAME = "Client";
         public static final int CLASS_COUNT_FIELDS = 1;
-        public static final String FIELD_CARD = "card";
-        public static final int CLASS_COUNT_CONSTRUCTORS = 2;
-        public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS + User.CLASS_COUNT_FIELDS;
+        public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS =
+                CLASS_COUNT_FIELDS + User.CLASS_COUNT_FIELDS;
     }
 
     static class Employee {
         public static final String CLASS_NAME = "Employee";
         public static final int CLASS_COUNT_FIELDS = 1;
-        public static final String FIELD_DEPARTMENT = "department";
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
-        public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS + User.CLASS_COUNT_FIELDS;
     }
 
     static class OrderRow {
@@ -83,6 +77,5 @@ public class TestConstants {
         public static final int CLASS_COUNT_FIELDS = 5;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;
-
     }
 }

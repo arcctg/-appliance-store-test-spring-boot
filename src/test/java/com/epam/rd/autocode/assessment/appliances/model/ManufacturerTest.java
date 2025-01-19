@@ -1,17 +1,26 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.LONG_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.MANUFACTURER_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.CLASS_COUNT_CONSTRUCTORS;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.CLASS_COUNT_FIELDS;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.CLASS_NAME;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.FIELD_ID;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.FIELD_NAME;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.STRING_TYPE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.*;
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ManufacturerTest {
     private static List<Field> allFields;

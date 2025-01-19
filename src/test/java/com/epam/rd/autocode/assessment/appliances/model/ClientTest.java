@@ -1,21 +1,22 @@
 package com.epam.rd.autocode.assessment.appliances.model;
 
-import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.CLIENT_TYPE;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.CLASS_COUNT_CONSTRUCTORS;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.CLASS_COUNT_FIELDS;
+import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.USER_TYPE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.epam.rd.autocode.assessment.appliances.model.enums.Role;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.*;
-import static com.epam.rd.autocode.assessment.appliances.model.TestConstants.Manufacturer.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class ClientTest {
 

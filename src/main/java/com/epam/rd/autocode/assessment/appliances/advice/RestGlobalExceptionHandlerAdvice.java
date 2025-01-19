@@ -1,7 +1,5 @@
 package com.epam.rd.autocode.assessment.appliances.advice;
 
-import com.epam.rd.autocode.assessment.appliances.exception.ApplianceNotFoundException;
-import com.epam.rd.autocode.assessment.appliances.exception.ClientNotFoundException;
 import com.epam.rd.autocode.assessment.appliances.exception.NotFoundException;
 import com.epam.rd.autocode.assessment.appliances.exception.UserAlreadyExistsException;
 import java.nio.file.AccessDeniedException;
@@ -51,8 +49,8 @@ public class RestGlobalExceptionHandlerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGlobalException(Exception ex) {
-        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+                "An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private Map<String, String> getErrorMessage(MethodArgumentNotValidException ex) {
