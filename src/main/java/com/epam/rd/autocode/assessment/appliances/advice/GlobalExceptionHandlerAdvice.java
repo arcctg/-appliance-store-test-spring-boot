@@ -59,8 +59,7 @@ public class GlobalExceptionHandlerAdvice {
         String message = ERROR_MESSAGE + ex.getMessage();
 
         model.addAttribute(MESSAGE, message);
-        logger.error(message);
-        ex.printStackTrace();
+        logger.error(message, ex);
 
         return "error/generalError";
     }

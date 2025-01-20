@@ -93,7 +93,7 @@
             <td>
                 <a class="btn btn-warning btn-sm" th:href="@{/appliances/edit(id=${appliance.id})}"
                    th:text="#{btn.edit}"/>
-                <form th:action="@{/appliances/delete}" th:method="delete"
+                <form class="d-inline" th:action="@{/appliances/delete}" th:method="delete"
                       onsubmit="return confirm('Are you sure you want to delete this object?');">
                     <input type="hidden" name="id" th:value="${appliance.id}"/>
                     <button type="submit" class="btn btn-danger btn-sm" th:text="#{btn.delete}"></button>
