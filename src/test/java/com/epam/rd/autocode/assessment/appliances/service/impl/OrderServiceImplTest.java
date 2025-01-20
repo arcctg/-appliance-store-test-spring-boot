@@ -142,10 +142,10 @@ class OrderServiceImplTest {
         mockSecurityContext("client@example.com");
 
         Order order = mock(Order.class);
+        Client client = new Client();
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-
-        CustomUser user = mock(Client.class);
-        when(userService.findUserByEmail("client@example.com")).thenReturn(user);
+        when(userService.findUserByEmail("client@example.com")).thenReturn(client);
+        when(order.getClient()).thenReturn(client);
 
         orderService.updateStatusById(1L, Status.PENDING);
 
