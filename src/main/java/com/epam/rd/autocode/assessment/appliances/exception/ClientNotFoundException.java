@@ -2,6 +2,7 @@ package com.epam.rd.autocode.assessment.appliances.exception;
 
 /**
  * Exception thrown when a client with the specified ID is not found.
+ * Extends {@link NotFoundException}.
  */
 public class ClientNotFoundException extends NotFoundException {
     /**
