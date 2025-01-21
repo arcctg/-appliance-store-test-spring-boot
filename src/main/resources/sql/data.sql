@@ -42,12 +42,12 @@ VALUES ('Claw', 'BIG', 'CLW-1000', 1, 'ACCUMULATOR', 'High power claw machine', 
        ('Gust', 'BIG', 'GST-5000', 5, 'ACCUMULATOR', 'Powerful and durable', 'Great for outdoor use', 650, 5.01),
        ('Ancile', 'SMALL', 'ANC-6000', 6, 'AC220', 'Reliable and safe', 'Perfect for home use', 230, 6.01),
        ('Halo', 'BIG', 'HLO-7000', 7, 'ACCUMULATOR', 'Versatile and robust', 'Handles tough jobs', 300, 7.01),
-       ('Blaze', 'BIG', 'BLZ-8000', 7, 'AC110', 'Fast and efficient', 'High-speed operations', 1500, 8.01),
-       ('Storm', 'BIG', 'STM-9000', 7, 'AC220', 'Heavy-duty', 'Designed for large projects', 1800, 9.01),
-       ('Zephyr', 'SMALL', 'ZPH-10000', 7, 'ACCUMULATOR', 'Quiet and efficient', 'Ideal for indoor use', 500, 10.01),
-       ('Cyclone', 'BIG', 'CYC-11000', 7, 'AC110', 'High power', 'Handles extreme conditions', 2500, 11.01),
-       ('Tempest', 'BIG', 'TMP-12000', 7, 'AC220', 'Robust and reliable', 'Perfect for continuous use', 2000, 12.01),
-       ('Vortex', 'SMALL', 'VTX-13000', 7, 'ACCUMULATOR', 'Compact and powerful', 'Great for quick tasks', 700, 13.01);
+       ('Blaze', 'BIG', 'BLZ-8000', 1, 'AC110', 'Fast and efficient', 'High-speed operations', 1500, 8.01),
+       ('Storm', 'BIG', 'STM-9000', 2, 'AC220', 'Heavy-duty', 'Designed for large projects', 1800, 9.01),
+       ('Zephyr', 'SMALL', 'ZPH-10000', 3, 'ACCUMULATOR', 'Quiet and efficient', 'Ideal for indoor use', 500, 10.01),
+       ('Cyclone', 'BIG', 'CYC-11000', 4, 'AC110', 'High power', 'Handles extreme conditions', 2500, 11.01),
+       ('Tempest', 'BIG', 'TMP-12000', 5, 'AC220', 'Robust and reliable', 'Perfect for continuous use', 2000, 12.01),
+       ('Vortex', 'SMALL', 'VTX-13000', 6, 'ACCUMULATOR', 'Compact and powerful', 'Great for quick tasks', 700, 13.01);
 
 
 COMMIT;
