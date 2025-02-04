@@ -1,14 +1,15 @@
-# Use a base image with Java
-FROM openjdk:17-jdk-slim
-
-# Set working directory
+# Stage 1: Build the application
+FROM maven:3.9.6-amazoncorretto-17 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
 
-# Information around who maintains the image
-LABEL org.opencontainers.image.authors="Stepan"
+RUN mvn clean package -DskipTests
 
-# Copy the JAR file
-COPY target/Appliance-store-Spring-0.0.1-SNAPSHOT.jar app.jar
+# Stage 2: Create a lightweight runtime image
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/Appliance-store-Spring-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose application port
 EXPOSE 8080
