@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -163,7 +164,7 @@ public class CartServiceImpl implements CartService {
             cartRepository.delete(c);
         });
 
-        orderRepository.findByClient(client).ifPresent(order -> {
+        orderRepository.findAllByClient(client, Pageable.unpaged()).forEach(order -> {
             order.setClient(null);
             order.setStatus(Status.CANCELLED);
         });

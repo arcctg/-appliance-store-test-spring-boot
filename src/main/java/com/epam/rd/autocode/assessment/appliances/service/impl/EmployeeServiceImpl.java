@@ -66,7 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployeeById(Long id) {
-        orderRepository.findByEmployee(getEmployeeById(id)).ifPresent(order -> order.setEmployee(null));
+        orderRepository.findAllByEmployee(getEmployeeById(id)).forEach(order -> order.setEmployee(null));
         employeeRepository.deleteById(id);
     }
 
